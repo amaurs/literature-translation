@@ -50,13 +50,54 @@ function getSlice() {
     var selectedCity = cityList[cityList.selectedIndex].value;
 
     console.log(selectedCountry + ", " + selectedGenre + ", " + selectedLanguage + ", " +selectedYear+ ", " + selectedCity);
-    var currentSlice = util.sliceByFilter(books, [{"country":selectedCountry}, {"genre":selectedGenre}, {"language":selectedLanguage}, {"year":selectedYear}, {"city":selectedCity}]);
+    var currentSlice = util.sliceByFilter(books, [
+                                                  //{"country":selectedCountry}, 
+                                                  {"genre":selectedGenre}, 
+                                                  {"language":selectedLanguage}, 
+                                                  //{"year":selectedYear}, 
+                                                  //{"city":selectedCity}
+                                                  ]);
     var elem = document.getElementById("json");
     if (elem) {
         elem.parentNode.removeChild(elem);
     }
-    console.log(currentSlice);
+    //console.log(currentSlice);
     document.body.appendChild(pretyBooksComponent(currentSlice));
+
+    paintCountries(currentSlice);
+}
+
+var paintedFeatures = [];
+
+function paintCountries(slice) {
+
+    var countriesToPaint = util.uniqueValues(slice, "country");
+    var countryCodes = [];
+    countriesToPaint.forEach(function(country){
+        countryCodes.push(util.getCountryId(country));
+    });
+
+    paintedFeatures.forEach(function (layer) {
+        map.removeLayer(layer);
+    });
+
+    console.log(countriesToPaint);
+    console.log(countryCodes);
+    countries.features.forEach(function(geojsonFeature){
+        console.log(geojsonFeature.id);
+        if(countryCodes.indexOf(geojsonFeature.id) > -1) {
+
+            var country = L.geoJSON(geojsonFeature);
+            paintedFeatures.push(country);
+            map.addLayer(country);
+        }
+
+        //console.log("\"" + geojsonFeature.properties.name+"\":\""++"\",");
+        
+        //
+        //
+    });
+
 }
 
 
@@ -74,12 +115,16 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token='
     id: 'mapbox.streets'
 }).addTo(map);
 
+/**
 
 countries.features.forEach(function(geojsonFeature){
-    L.geoJSON(geojsonFeature).addTo(map);
+    var country = L.geoJSON(geojsonFeature);
+
+    map.addLayer(country);
 });
+console.log(util.uniqueValues(books, "country"));
 
-
+**/
 document.body.appendChild(comboBox(util.uniqueValues(books, "country"), "select-country"));
 document.body.appendChild(comboBox(util.uniqueValues(books, "genre"), "select-genre"));
 document.body.appendChild(comboBox(util.uniqueValues(books, "city"), "select-city"));
