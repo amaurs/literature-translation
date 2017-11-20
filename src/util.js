@@ -19,12 +19,37 @@ function onlyUnique(value, index, self) {
 
 function uniqueValues(array, column) {
     var returnArray = [];
-    array.forEach(function(element){
+    array.forEach(function(element) {
         returnArray.push(element[column]);
     });
-    return Array.from(new Set(returnArray));
+    return Array.from(new Set(returnArray)).sort();
 }
+
+function sliceByFilter(array, filters) {
+    var result = [];
+
+    array.forEach(function(element){
+        if(rowFilter(element, filters)) {
+            result.push(element);
+        }
+    })
+    
+    return result;
+}
+
+function rowFilter(obj, filters) {
+    for(var i=0; i < filters.length; i++) {
+        var filter = filters[i];
+        var column = Object.keys(filter)[0];
+        if(obj[column] != filter[column]){
+            return false;
+        }
+    }
+    return true;
+}
+
 
 module.exports.onlyUnique = onlyUnique;
 module.exports.filterByColumn = filterByColumn;
 module.exports.uniqueValues = uniqueValues;
+module.exports.sliceByFilter = sliceByFilter;
