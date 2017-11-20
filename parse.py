@@ -9,19 +9,23 @@ import io, json
 
 def main(path):
     data = []
-    with open(path, 'rb') as f:
+    with open(path, 'rt', encoding='utf-8') as f:
         reader = csv.reader(f)
         header = next(reader, None)
-        #print header
+        print(header)
         for row in reader:
             book = {}
             book['year'] = row[3]
+            book['city'] = row[11]
+            book['country'] = row[12]
+            book['language'] = row[13]
+            book['genre'] = row[14]
             data.append(book)
 
     json_path = '%s.json' % path.split('.')[0]
     
-    with io.open(json_path, 'w') as f:
-        f.write(json.dumps(data))
+    with io.open(json_path, 'w', encoding='utf-8') as f:
+        f.write(json.dumps(data, ensure_ascii=False))
     
 
 if __name__ == '__main__':
