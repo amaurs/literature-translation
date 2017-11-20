@@ -1,5 +1,7 @@
 import _ from 'lodash';
 import L from 'leaflet';
+const books = require('./data/dataset.json');
+const countries = require('./data/countries.geo.json')
 
 function component() {
   var element = document.createElement('div');
@@ -14,7 +16,7 @@ document.body.appendChild(component());
 
 var accessToken = 'pk.eyJ1IjoiYW1hdSIsImEiOiIxTmxLVWlVIn0.JJuKgBjkpUtOs0VZjtmJRw';
 
-var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+var map = L.map('mapid').setView([51.505, -0.09], 13);
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + accessToken, {
     maxZoom: 18,
@@ -22,4 +24,11 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token='
         '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
         'Imagery © <a href="http://mapbox.com">Mapbox</a>',
     id: 'mapbox.streets'
-}).addTo(mymap);
+}).addTo(map);
+
+
+countries.features.forEach(function(geojsonFeature){
+    L.geoJSON(geojsonFeature).addTo(map);
+});
+
+
