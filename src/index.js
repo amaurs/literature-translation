@@ -1,5 +1,8 @@
 import _ from 'lodash';
 import L from 'leaflet';
+
+import Util from './util.js';
+
 const books = require('./data/dataset.json');
 const countries = require('./data/countries.geo.json')
 
@@ -30,5 +33,10 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token='
 countries.features.forEach(function(geojsonFeature){
     L.geoJSON(geojsonFeature).addTo(map);
 });
+
+
+console.log(Util.uniqueValues(books, "country"));
+console.log(Util.uniqueValues(books, "country"));
+
 
 
