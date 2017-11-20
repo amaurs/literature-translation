@@ -20,7 +20,9 @@
   },
   "homepage": "https://github.com/amaurs/literature-translation#readme",
   "devDependencies": {
+    "css-loader": "^0.28.7",
     "json-loader": "^0.5.7",
+    "style-loader": "^0.19.0",
     "webpack": "^3.8.1",
     "webpack-dev-server": "^2.9.4"
   },

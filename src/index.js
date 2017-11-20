@@ -1,19 +1,11 @@
 import _ from 'lodash';
 import L from 'leaflet';
-
+import Styles from './style/main.css';
 import util from './util.js';
 
 const books = require('./data/dataset.json');
 const countries = require('./data/countries.geo.json')
 
-function component() {
-    var element = document.createElement('div');
-
-    // Lodash, currently included via a script, is required for this line to work
-    element.innerHTML = _.join(['This', 'is', 'cool'], ' ');
-
-  return element;
-}
 
 function comboBox(options, name) {
     var selectList = document.createElement("select");
@@ -35,34 +27,66 @@ function pretyBooksComponent(information) {
     return pre;
 }
 
+function yearComponent(legend) {
+    var yearContainer = document.createElement("div");
+    yearContainer.id = "year-card";
+    yearContainer.innerHTML = "<div>Años</div><div>"+legend+"</div>";
+    return yearContainer;
+}
+
+function rangeComponent(options, name) {
+    console.log(options);
+
+    var yearRange = document.createElement("input");
+    yearRange.type = "range";
+    yearRange.min = parseInt(options[1]);
+    yearRange.max = parseInt(options[options.length - 1]);
+    yearRange.value = 50;
+    yearRange.id = name;
+    yearRange.addEventListener("change", getSlice);
+
+    return yearRange;
+}
+
+
+
 function getSlice() {
-    var countryList = document.getElementById("select-country")
-    var genreList = document.getElementById("select-genre")
-    var yearList = document.getElementById("select-year")
-    var languageList = document.getElementById("select-language")
-    var cityList = document.getElementById("select-city")
+    //var countryList = document.getElementById("select-country")
+
+    var genreList = document.getElementById("select-genre");
+    var yearRange = document.getElementById("select-year")
+    var languageList = document.getElementById("select-language");
+    //var cityList = document.getElementById("select-city")
     
 
-    var selectedCountry = countryList[countryList.selectedIndex].value;
+    //var selectedCountry = countryList[countryList.selectedIndex].value;
     var selectedGenre = genreList[genreList.selectedIndex].value;
     var selectedLanguage = languageList[languageList.selectedIndex].value;
-    var selectedYear = yearList[yearList.selectedIndex].value;
-    var selectedCity = cityList[cityList.selectedIndex].value;
+    var selectedYear = yearRange.value;
+    //var selectedCity = cityList[cityList.selectedIndex].value;
 
-    console.log(selectedCountry + ", " + selectedGenre + ", " + selectedLanguage + ", " +selectedYear+ ", " + selectedCity);
+    //console.log(selectedCountry + ", " + selectedGenre + ", " + selectedLanguage + ", " +selectedYear+ ", " + selectedCity);
     var currentSlice = util.sliceByFilter(books, [
                                                   //{"country":selectedCountry}, 
                                                   {"genre":selectedGenre}, 
                                                   {"language":selectedLanguage}, 
                                                   //{"year":selectedYear}, 
                                                   //{"city":selectedCity}
-                                                  ]);
+                                                  ], 
+                                                  selectedYear);
+    console.log();
+
     var elem = document.getElementById("json");
     if (elem) {
         elem.parentNode.removeChild(elem);
     }
+    var yearElement = document.getElementById("year-card");
+    if (yearElement) {
+        yearElement.parentNode.removeChild(yearElement);
+    }
     //console.log(currentSlice);
-    document.body.appendChild(pretyBooksComponent(currentSlice));
+    document.getElementById("controls").appendChild(yearComponent(selectedYear+"-"+yearRange.max));
+    document.getElementById("slice").appendChild(pretyBooksComponent(currentSlice));
 
     paintCountries(currentSlice);
 }
@@ -81,10 +105,7 @@ function paintCountries(slice) {
         map.removeLayer(layer);
     });
 
-    console.log(countriesToPaint);
-    console.log(countryCodes);
     countries.features.forEach(function(geojsonFeature){
-        console.log(geojsonFeature.id);
         if(countryCodes.indexOf(geojsonFeature.id) > -1) {
 
             var country = L.geoJSON(geojsonFeature);
@@ -100,12 +121,9 @@ function paintCountries(slice) {
 
 }
 
-
-document.body.appendChild(component());
-
 var accessToken = 'pk.eyJ1IjoiYW1hdSIsImEiOiIxTmxLVWlVIn0.JJuKgBjkpUtOs0VZjtmJRw';
 
-var map = L.map('mapid').setView([0, 0], 1);
+var map = L.map('map').setView([0, 0], 1);
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + accessToken, {
     maxZoom: 18,
@@ -125,11 +143,12 @@ countries.features.forEach(function(geojsonFeature){
 console.log(util.uniqueValues(books, "country"));
 
 **/
-document.body.appendChild(comboBox(util.uniqueValues(books, "country"), "select-country"));
-document.body.appendChild(comboBox(util.uniqueValues(books, "genre"), "select-genre"));
-document.body.appendChild(comboBox(util.uniqueValues(books, "city"), "select-city"));
-document.body.appendChild(comboBox(util.uniqueValues(books, "year"), "select-year"));
-document.body.appendChild(comboBox(util.uniqueValues(books, "language"), "select-language"));
+//document.body.appendChild(comboBox(util.uniqueValues(books, "country"), "select-country"));
+document.getElementById("controls").appendChild(rangeComponent(util.uniqueValues(books, "year"), "select-year"));
+
+document.getElementById("controls").appendChild(comboBox(util.uniqueValues(books, "genre"), "select-genre"));
+//document.body.appendChild(comboBox(util.uniqueValues(books, "city"), "select-city"));
+document.getElementById("controls").appendChild(comboBox(util.uniqueValues(books, "language"), "select-language"));
 
 
 

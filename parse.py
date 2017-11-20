@@ -15,6 +15,7 @@ def main(path):
         print(header)
         for row in reader:
             book = {}
+            book['title'] = row[2]
             book['year'] = row[3]
             book['city'] = row[11]
             book['country'] = row[12]

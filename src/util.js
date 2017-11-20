@@ -25,17 +25,19 @@ function uniqueValues(array, column) {
     return Array.from(new Set(returnArray)).sort();
 }
 
-function sliceByFilter(array, filters) {
+function sliceByFilter(array, filters, yearLow) {
     var result = [];
 
     array.forEach(function(element){
-        if(rowFilter(element, filters)) {
+        if(rowFilter(element, filters) && yearLow<=parseInt(element["year"])) {
             result.push(element);
         }
     })
     
     return result;
 }
+
+
 
 function rowFilter(obj, filters) {
     for(var i=0; i < filters.length; i++) {
