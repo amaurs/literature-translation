@@ -25,7 +25,7 @@ def main(path):
     json_path = '%s.json' % path.split('.')[0]
     
     with io.open(json_path, 'w', encoding='utf-8') as f:
-        f.write(json.dumps(data, ensure_ascii=False))
+        f.write(json.dumps(data, indent=4, ensure_ascii=False))
     
 
 if __name__ == '__main__':
