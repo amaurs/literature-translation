@@ -16,7 +16,7 @@ function sliceByFilter(array, filters) {
         filters.forEach(function(filter){
             if(filter.value !== "Todos") {
                 if(filter.key === "year"){
-                    if(parseInt(element[filter.key]) <= parseInt(filter.value)){
+                    if(parseInt(element[filter.key]) < parseInt(filter.value)){
                         add &= false;
                         //console.log(parseInt(element[filter.key]) + " <= "+ parseInt(filter.value));
     
