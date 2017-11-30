@@ -13,7 +13,7 @@ class Dropdown extends React.Component {
         const items = this.props.options.map((option, index) => 
                 <Option key={index} value={option} />
             );
-        return <select className="Dropdown" onChange={()=>this.doSomething()}>{items}</select>;
+        return <select className="Dropdown" value={this.props.selectedOption} onChange={(event)=>this.props.onChange(event)}>{items}</select>;
     }
 }
 

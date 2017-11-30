@@ -6,3 +6,11 @@
 .Selection-option button{
     float: right;
 }
+
+.Hid {
+    display: none;
+}
+
+.Vid {
+    display: inline;
+}

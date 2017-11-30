@@ -1,6 +1,6 @@
 
 function uniqueValues(array, column) {
-    let returnArray = [];
+    let returnArray = ['Todos'];
     array.forEach(function(element) {
         returnArray.push(element[column]);
     });
@@ -8,17 +8,24 @@ function uniqueValues(array, column) {
 }
 
 function sliceByFilter(array, filters) {
+    console.log("Slice by Filter");
+
     let result = [];
     array.forEach(function(element){
         let add = true;
         filters.forEach(function(filter){
-            if(filter.key === "year"){
-                if(parseInt(element[filter.key]) <= parseInt(filter.value)){
-                    add &= false;
-                }
-            } else {
-                if(element[filter.key] !== filter.value){
-                    add &= false;
+            if(filter.value !== "Todos") {
+                if(filter.key === "year"){
+                    if(parseInt(element[filter.key]) <= parseInt(filter.value)){
+                        add &= false;
+                        //console.log(parseInt(element[filter.key]) + " <= "+ parseInt(filter.value));
+    
+                    }
+                } else {
+                    if(element[filter.key] !== filter.value){
+                        add &= false;
+                        //console.log(element[filter.key] + "!==" + filter.value);
+                    }
                 }
             }
         });
@@ -26,6 +33,7 @@ function sliceByFilter(array, filters) {
             result.push(element);
         }
     });
+    console.log(result.length)
     return result;
 }
 

@@ -15,7 +15,7 @@ class Selection extends React.Component {
 
 function Option(props) {
     return (
-        <div className="Selection-option">{props.value} <button>X</button></div>
+        <div className={"Selection-option " + (props.value==="Todos"?"Hid":"Vis")} >{props.value} <button>X</button></div>
     );
 }
 
