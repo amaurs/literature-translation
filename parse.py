@@ -15,12 +15,12 @@ def main(path):
         print(header)
         for row in reader:
             book = {}
-            book['title'] = row[2]
-            book['year'] = row[3]
-            book['city'] = row[11]
-            book['country'] = row[12]
-            book['language'] = row[13]
-            book['genre'] = row[14]
+            book['title'] = row[2].decode('utf8') if len(row[2].decode('utf8'))>0 else 'Vació'.decode('utf8')
+            book['year'] = row[3].decode('utf8') if len(row[3].decode('utf8'))>0 else 'Vació'.decode('utf8')
+            book['city'] = row[11].decode('utf8') if len(row[11].decode('utf8'))>0 else 'Vació'.decode('utf8')
+            book['country'] = row[12].decode('utf8') if len(row[12].decode('utf8'))>0 else 'Vació'.decode('utf8')
+            book['language'] = row[13].decode('utf8') if len(row[13].decode('utf8'))>0 else 'Vació'.decode('utf8')
+            book['genre'] = row[14].decode('utf8') if len(row[14].decode('utf8'))>0 else 'Vació'.decode('utf8')
             data.append(book)
 
     json_path = '%s.json' % path.split('.')[0]
