@@ -1,54 +1,34 @@
 
-function filterByColumn(array, index, value)
-{
-    var returnArray = [];
-    for(var i = 0; i < array.length; i++)
-    {
-        var row = array[i];
-        if(row[index] == value)
-        {
-            returnArray.push(row);
-        }
-    }
-    return returnArray;
-}
-
-function onlyUnique(value, index, self) { 
-    return self.indexOf(value) === index;
-}
-
 function uniqueValues(array, column) {
-    var returnArray = [];
+    let returnArray = [];
     array.forEach(function(element) {
         returnArray.push(element[column]);
     });
     return Array.from(new Set(returnArray)).sort();
 }
 
-function sliceByFilter(array, filters, yearLow) {
-    var result = [];
-
+function sliceByFilter(array, filters) {
+    let result = [];
     array.forEach(function(element){
-        if(rowFilter(element, filters) && yearLow<=parseInt(element["year"])) {
+        let add = true;
+        filters.forEach(function(filter){
+            if(filter.key === "year"){
+                if(parseInt(element[filter.key]) <= parseInt(filter.value)){
+                    add &= false;
+                }
+            } else {
+                if(element[filter.key] !== filter.value){
+                    add &= false;
+                }
+            }
+        });
+        if(add){
             result.push(element);
         }
-    })
-    
+    });
     return result;
 }
 
-
-
-function rowFilter(obj, filters) {
-    for(var i=0; i < filters.length; i++) {
-        var filter = filters[i];
-        var column = Object.keys(filter)[0];
-        if(obj[column] != filter[column]){
-            return false;
-        }
-    }
-    return true;
-}
 
 function getCountryId(name) {
     var nameMap = {
@@ -240,10 +220,4 @@ function getCountryId(name) {
 }
 
 
-
-
-module.exports.onlyUnique = onlyUnique;
-module.exports.filterByColumn = filterByColumn;
-module.exports.uniqueValues = uniqueValues;
-module.exports.sliceByFilter = sliceByFilter;
-module.exports.getCountryId = getCountryId;
+export {uniqueValues, sliceByFilter, getCountryId};

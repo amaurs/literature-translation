@@ -1,9 +1,6 @@
 import React from 'react';
 
 class Data extends React.Component {
-    constructor(props) {
-        super(props);
-    }
     render() {
         return <pre className="json"><code>{JSON.stringify(this.props.data, null, 4)}</code></pre>;
     }

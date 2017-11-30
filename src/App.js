@@ -1,19 +1,28 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
-import myData from './data/dataset.json';
+import books from './data/dataset.json';
 import Data from './Data';
+import Dropdown from './Dropdown';
+import Selection from './Selection';
+import {uniqueValues, sliceByFilter} from './util';
 import './App.css';
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      slice : myData,
-    }
 
+
+                                               
+            
+    this.state = {
+      filter:[{key:"year", value:"1900"}, 
+              //{key:"genre", value:"Ensayo"}, 
+              //{key:"language", value:"Inglés"}, 
+              {key:"country", value:"México"}, 
+              {key:"city", value:"Guadalajara"}]
+    }
   }
   render() {
-    console.log(myData);
     return (
       <div>
         <div className="controls">
@@ -21,12 +30,15 @@ class App extends Component {
             <img src={logo} className="App-logo" alt="logo" />
             <h1 className="App-title">Welcome to React</h1>
           </header>
-          <p className="App-intro">
-            This is the first difference to the code.
-          </p>
+          <Dropdown options={uniqueValues(books, "year")}/>
+          <Dropdown options={uniqueValues(books, "genre")}/>
+          <Dropdown options={uniqueValues(books, "language")}/>
+          <Dropdown options={uniqueValues(books, "country")}/>
+          <Dropdown options={uniqueValues(books, "city")}/>
+          <Selection options={this.state.filter}/>
         </div>
         <div className="data">
-          <Data data={this.state.slice}/>
+          <Data data={sliceByFilter(books,this.state.filter)}/>
         </div>
       </div>
     );
