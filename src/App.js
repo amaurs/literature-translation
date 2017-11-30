@@ -23,9 +23,14 @@ class App extends Component {
     }
   }
   handleChange(parent, event) {
-    console.log("Hello change from " + parent + "!");
-    console.log(event.target.value);
+    //console.log("Hello change from " + parent + "!");
+    //console.log(event.target.value);
     this.setValueFromType(parent, event.target.value);
+  }
+
+  handleClick(parent) {
+    //console.log("Hello change from " + parent + "!");
+    this.setValueFromType(parent, "Todos");
   }
 
   getValueFromType(type) {
@@ -57,6 +62,10 @@ class App extends Component {
            </div>;
   }
 
+  renderSelection(type) {
+    return <Selection value={this.getValueFromType(type)} onClick={()=>this.handleClick(type)}/>;
+  }
+
   render() {
 
     return (
@@ -71,7 +80,13 @@ class App extends Component {
           {this.renderDropdown("language")}
           {this.renderDropdown("country")}
           {this.renderDropdown("city")}
-          <Selection options={this.state.filter}/>
+          <div className="selection-option">
+            {this.renderSelection("year")}
+            {this.renderSelection("genre")}
+            {this.renderSelection("language")}
+            {this.renderSelection("country")}
+            {this.renderSelection("city")}
+          </div>
         </div>
         <div className="data">
           <Data data={sliceByFilter(books, this.state.filter)}/>

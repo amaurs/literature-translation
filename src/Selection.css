@@ -1,11 +1,3 @@
-.Selection-option {
-    width: 100%;
-    margin: 5px 0px;
-    border-style: dashed;
-}
-.Selection-option button{
-    float: right;
-}
 
 .Hid {
     display: none;

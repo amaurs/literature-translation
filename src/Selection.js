@@ -6,17 +6,9 @@ import './Selection.css';
 class Selection extends React.Component {
 
     render() {
-        const items = this.props.options.map((option, index) => 
-                <Option key={index} value={option.value} />
-            );
-        return <div className="Selection">{items}</div>;
+        return <div className={"Selection-option " + (this.props.value==="Todos"?"Hid":"Vis")} >{this.props.value} <button onClick={()=>this.props.onClick()}>X</button></div>;
     }
 }
 
-function Option(props) {
-    return (
-        <div className={"Selection-option " + (props.value==="Todos"?"Hid":"Vis")} >{props.value} <button>X</button></div>
-    );
-}
 
 export default Selection;

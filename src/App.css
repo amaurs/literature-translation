@@ -32,6 +32,16 @@
   height: 100%;
 }
 
+.selection-option {
+    width: 100%;
+    margin: 5px 0px;
+    border-style: dashed;
+}
+.selection-option button{
+    float: right;
+}
+
+
 
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
