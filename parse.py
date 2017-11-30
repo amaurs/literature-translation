@@ -9,7 +9,7 @@ import io, json
 
 def main(path):
     data = []
-    with open(path, 'rt', encoding='utf-8') as f:
+    with open(path, 'rt') as f:
         reader = csv.reader(f)
         header = next(reader, None)
         print(header)
