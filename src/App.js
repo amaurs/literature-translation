@@ -10,10 +10,6 @@ import './App.css';
 class App extends Component {
   constructor(props) {
     super(props);
-
-
-                                               
-            
     this.state = {
       filter:[{key:"year", value:"Todos"}, 
               {key:"genre", value:"Todos"}, 
@@ -58,7 +54,7 @@ class App extends Component {
   renderDropdown(type) {
     return <div>
                <label>{type}</label>
-               <Dropdown options={uniqueValues(books, type)} selectedOption={this.getValueFromType(type)} onChange={(event)=>this.handleChange(type,event)}/>
+               <Dropdown options={uniqueValues(sliceByFilter(books, this.state.filter), type)} selectedOption={this.getValueFromType(type)} onChange={(event)=>this.handleChange(type,event)}/>
            </div>;
   }
 
