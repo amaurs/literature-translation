@@ -5,17 +5,30 @@
 
 .App-header {
   background-color: #222;
-  height: 150px;
-  padding: 20px;
+  height: 50px;
+  width: 100%;
+  padding: 10px;
   color: white;
+  position: fixed;
+  z-index: 100;
 }
 
 .App-title {
-  font-size: 1.5em;
+  font-size: 10px;
 }
 
-.App-intro {
-  font-size: large;
+.App-content {
+  padding-top: 70px;
+}
+
+.App-dropdown {
+  width: 50%;
+  float: left;
+}
+
+.App-selection {
+  width: 50%;
+  float: right;
 }
 
 .controls {
@@ -42,7 +55,10 @@
     float: right;
 }
 
-
+.leaflet-container {
+    height: 400px;
+    width: 100%;
+}
 
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }

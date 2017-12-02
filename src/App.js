@@ -4,7 +4,8 @@ import books from './data/dataset.json';
 import Data from './Data';
 import Dropdown from './Dropdown';
 import Selection from './Selection';
-import {uniqueValues, sliceByFilter, download} from './util';
+import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
+import { uniqueValues, sliceByFilter, download } from './util';
 import './App.css';
 
 class App extends Component {
@@ -15,7 +16,10 @@ class App extends Component {
               {key:"genre", value:"Todos"}, 
               {key:"language", value:"Todos"}, 
               {key:"country", value:"Todos"}, 
-              {key:"city", value:"Todos"}]
+              {key:"city", value:"Todos"}],
+      lat: 51.505,
+      lng: -0.09,
+      zoom: 13,
     }
   }
   handleChange(parent, event) {
@@ -71,30 +75,46 @@ class App extends Component {
   }
 
   render() {
-
+    const position = [this.state.lat, this.state.lng];
     return (
       <div>
-        <div className="controls">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <h1 className="App-title">Welcome to React</h1>
-          </header>
-          {this.renderDropdown("year")}
-          {this.renderDropdown("genre")}
-          {this.renderDropdown("language")}
-          {this.renderDropdown("country")}
-          {this.renderDropdown("city")}
-          <div>
-            {this.renderSelection("year")}
-            {this.renderSelection("genre")}
-            {this.renderSelection("language")}
-            {this.renderSelection("country")}
-            {this.renderSelection("city")}
+        <header className="App-header">
+          <h1>Traducciónes literarias</h1>
+        </header>
+        <div className="App-content">
+          <div className="controls">
+            <div>
+              <Map center={position} zoom={this.state.zoom}>
+                  <TileLayer
+                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                    url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+                  />
+                <Marker position={position}>
+                  <Popup>
+                    <span>A pretty CSS3 popup. <br/> Easily customizable.</span>
+                  </Popup>
+                </Marker>
+              </Map>
+            </div>
+            <div className="App-dropdown">
+              {this.renderDropdown("year")}
+              {this.renderDropdown("genre")}
+              {this.renderDropdown("language")}
+              {this.renderDropdown("country")}
+              {this.renderDropdown("city")}
+            </div>
+            <div className="App-selection">
+              {this.renderSelection("year")}
+              {this.renderSelection("genre")}
+              {this.renderSelection("language")}
+              {this.renderSelection("country")}
+              {this.renderSelection("city")}
+            </div>
           </div>
-        </div>
-        <div className="data">
-          <button onClick={()=>this.handleDownload("json")}>Descargar json</button>
-          <Data data={sliceByFilter(books, this.state.filter)}/>
+          <div className="data">
+            <button onClick={()=>this.handleDownload("json")}>Descargar json</button>
+            <Data data={sliceByFilter(books, this.state.filter)}/>
+          </div>
         </div>
       </div>
     );
