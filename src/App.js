@@ -5,13 +5,13 @@ import Data from './Data';
 import Dropdown from './Dropdown';
 import Selection from './Selection';
 import { Map, TileLayer, Marker, Popup, Polygon, GeoJSON} from 'react-leaflet';
-import { uniqueValues, sliceByFilter, download } from './util';
+import { uniqueValues, sliceByFilter, download, getCountryId } from './util';
 import './App.css';
 
 class App extends Component {
   constructor(props) {
     super(props);
-    console.log(countries);
+    
     this.state = {
       filter: [{key:"year", value:"Todos"}, 
               {key:"genre", value:"Todos"}, 
@@ -50,8 +50,38 @@ class App extends Component {
     return value;
   }
 
+  filterCountries() {
+    
+    let tokens = uniqueValues(this.state.slice, "country").map(country => getCountryId(country));
+    console.log(tokens);
+
+    let copy = JSON.parse(JSON.stringify(countries))
+    copy.features = [];
+
+    for(let i = 0; i < countries.features.length; i++) {
+      if(tokens.indexOf(countries.features[i].id) > -1) {
+
+            copy.features.push(JSON.parse(JSON.stringify(countries.features[i])));
+      }
+    }
+    console.log(copy);
+
+    return copy;
+  }
+  renderGeoJsonLayers() {
+    let layers = [];
+
+    this.filterCountries().features.forEach(feature => {
+
+        layers.push(<GeoJSON key={ feature.id } data={ feature } style={this.getStyle}/>);
+    });
+
+    return layers;
+  }
+
   setValueFromType(type, value) {
     let helper = this.state.filter.slice()
+
 
 
     helper.forEach(function(option){
@@ -61,6 +91,7 @@ class App extends Component {
     });
     this.setState({filter:helper});
     this.setState({slice:sliceByFilter(books, this.state.filter)});
+    
   }
 
   renderDropdown(type) {
@@ -100,7 +131,7 @@ class App extends Component {
                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                     url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
                   />
-                <GeoJSON data={countries} style={this.getStyle} />
+                {this.renderGeoJsonLayers()}
               </Map>
             </div>
             <div className="App-dropdown">
