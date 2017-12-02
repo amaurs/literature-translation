@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import books from './data/dataset.json';
+import countries from './data/countries.geo.json';
 import Data from './Data';
 import Dropdown from './Dropdown';
 import Selection from './Selection';
-import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
+import { Map, TileLayer, Marker, Popup, Polygon, GeoJSON} from 'react-leaflet';
 import { uniqueValues, sliceByFilter, download } from './util';
 import './App.css';
 
 class App extends Component {
   constructor(props) {
     super(props);
+    console.log(countries);
     this.state = {
       filter: [{key:"year", value:"Todos"}, 
               {key:"genre", value:"Todos"}, 
@@ -17,9 +19,9 @@ class App extends Component {
               {key:"country", value:"Todos"}, 
               {key:"city", value:"Todos"}],
       slice: books,
-      lat: 51.505,
-      lng: -0.09,
-      zoom: 13,
+      lat: 0.0,
+      lng: 0.0,
+      zoom: 1,
     }
   }
   handleChange(parent, event) {
@@ -74,9 +76,17 @@ class App extends Component {
               <Selection value={this.getValueFromType(type)} onClick={()=>this.handleClick(type)}/>
            </div>;
   }
+  getStyle(feature, layer) {
+    return {
+      color: '#006400',
+      weight: 1,
+      opacity: 0.65
+    }
+  }
 
   render() {
     const position = [this.state.lat, this.state.lng];
+
     return (
       <div>
         <header className="App-header">
@@ -90,11 +100,7 @@ class App extends Component {
                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                     url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
                   />
-                <Marker position={position}>
-                  <Popup>
-                    <span>A pretty CSS3 popup. <br/> Easily customizable.</span>
-                  </Popup>
-                </Marker>
+                <GeoJSON data={countries} style={this.getStyle} />
               </Map>
             </div>
             <div className="App-dropdown">

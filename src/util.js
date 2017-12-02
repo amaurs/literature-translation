@@ -8,7 +8,7 @@ function uniqueValues(array, column) {
 }
 
 function sliceByFilter(array, filters) {
-    console.log("Slice by Filter");
+    //console.log("Slice by Filter");
 
     let result = [];
     array.forEach(function(element){
