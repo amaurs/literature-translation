@@ -4,7 +4,7 @@ import books from './data/dataset.json';
 import Data from './Data';
 import Dropdown from './Dropdown';
 import Selection from './Selection';
-import {uniqueValues, sliceByFilter} from './util';
+import {uniqueValues, sliceByFilter, download} from './util';
 import './App.css';
 
 class App extends Component {
@@ -29,10 +29,15 @@ class App extends Component {
     this.setValueFromType(parent, "Todos");
   }
 
+  handleDownload(parent) {
+    //console.log("Download " + parent + "!");
+    download(JSON.stringify(sliceByFilter(books, this.state.filter), null, 4), "datos.json", "application/json");
+  }
+
   getValueFromType(type) {
     let value = "Todos";
     this.state.filter.forEach(function(option){
-      if(option.key == type) {
+      if(option.key === type) {
         value = option.value;
       }
     });
@@ -44,7 +49,7 @@ class App extends Component {
 
 
     helper.forEach(function(option){
-      if(option.key == type) {
+      if(option.key === type) {
         option.value = value;
       }
     });
@@ -85,6 +90,7 @@ class App extends Component {
           </div>
         </div>
         <div className="data">
+          <button onClick={()=>this.handleDownload("json")}>Descargar json</button>
           <Data data={sliceByFilter(books, this.state.filter)}/>
         </div>
       </div>

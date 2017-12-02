@@ -16,7 +16,7 @@ function sliceByFilter(array, filters) {
         filters.forEach(function(filter){
             if(filter.value !== "Todos") {
                 if(filter.key === "year"){
-                    if(parseInt(element[filter.key]) < parseInt(filter.value)){
+                    if(parseInt(element[filter.key], 10) < parseInt(filter.value, 10)){
                         add &= false;
                         //console.log(parseInt(element[filter.key]) + " <= "+ parseInt(filter.value));
     
@@ -35,6 +35,25 @@ function sliceByFilter(array, filters) {
     });
     console.log(result.length)
     return result;
+}
+
+function download(data, filename, mime) {
+    let blob = new Blob([data], {type: mime || 'application/octet-stream'});
+    let blobURL = window.URL.createObjectURL(blob);
+    let tempLink = document.createElement('a');
+    tempLink.style.display = 'none';
+    tempLink.href = blobURL;
+    tempLink.setAttribute('download', filename); 
+    
+    // Safari only
+    if (typeof tempLink.download === 'undefined') {
+        tempLink.setAttribute('target', '_blank');
+    }
+    
+    document.body.appendChild(tempLink);
+    tempLink.click();
+    document.body.removeChild(tempLink);
+    window.URL.revokeObjectURL(blobURL);
 }
 
 
@@ -228,4 +247,4 @@ function getCountryId(name) {
 }
 
 
-export {uniqueValues, sliceByFilter, getCountryId};
+export {uniqueValues, sliceByFilter, getCountryId, download};
