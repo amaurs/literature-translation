@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import books from './data/dataset.json';
 import Data from './Data';
 import Dropdown from './Dropdown';
@@ -12,11 +11,12 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      filter:[{key:"year", value:"Todos"}, 
+      filter: [{key:"year", value:"Todos"}, 
               {key:"genre", value:"Todos"}, 
               {key:"language", value:"Todos"}, 
               {key:"country", value:"Todos"}, 
               {key:"city", value:"Todos"}],
+      slice: books,
       lat: 51.505,
       lng: -0.09,
       zoom: 13,
@@ -35,7 +35,7 @@ class App extends Component {
 
   handleDownload(parent) {
     //console.log("Download " + parent + "!");
-    download(JSON.stringify(sliceByFilter(books, this.state.filter), null, 4), "datos.json", "application/json");
+    download(JSON.stringify(this.state.slice, null, 4), "datos.json", "application/json");
   }
 
   getValueFromType(type) {
@@ -58,12 +58,13 @@ class App extends Component {
       }
     });
     this.setState({filter:helper});
+    this.setState({slice:sliceByFilter(books, this.state.filter)});
   }
 
   renderDropdown(type) {
     return <div>
                <label>{type}</label>
-               <Dropdown options={uniqueValues(sliceByFilter(books, this.state.filter), type)} selectedOption={this.getValueFromType(type)} onChange={(event)=>this.handleChange(type,event)}/>
+               <Dropdown options={uniqueValues(this.state.slice, type)} selectedOption={this.getValueFromType(type)} onChange={(event)=>this.handleChange(type,event)}/>
            </div>;
   }
 
@@ -113,7 +114,7 @@ class App extends Component {
           </div>
           <div className="data">
             <button onClick={()=>this.handleDownload("json")}>Descargar json</button>
-            <Data data={sliceByFilter(books, this.state.filter)}/>
+            <Data data={this.state.slice}/>
           </div>
         </div>
       </div>
