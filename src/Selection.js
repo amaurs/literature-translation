@@ -6,7 +6,7 @@ import './Selection.css';
 class Selection extends React.Component {
 
     render() {
-        return <div className={"Selection-option " + (this.props.value==="Todos"?"Hid":"Vis")} >{this.props.value} <button onClick={()=>this.props.onClick()}>X</button></div>;
+        return <div className={"Selection-option"} >{this.props.value} <button onClick={()=>this.props.onClick()}>X</button></div>;
     }
 }
 

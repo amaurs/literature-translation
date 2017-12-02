@@ -64,7 +64,10 @@ class App extends Component {
   }
 
   renderSelection(type) {
-    return <Selection value={this.getValueFromType(type)} onClick={()=>this.handleClick(type)}/>;
+
+    return <div className={"selection-option " + (this.getValueFromType(type)==="Todos"?"Hid":"Vis")}>
+              <Selection value={this.getValueFromType(type)} onClick={()=>this.handleClick(type)}/>
+           </div>;
   }
 
   render() {
@@ -81,7 +84,7 @@ class App extends Component {
           {this.renderDropdown("language")}
           {this.renderDropdown("country")}
           {this.renderDropdown("city")}
-          <div className="selection-option">
+          <div>
             {this.renderSelection("year")}
             {this.renderSelection("genre")}
             {this.renderSelection("language")}

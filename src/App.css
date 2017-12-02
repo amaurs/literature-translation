@@ -36,6 +36,7 @@
     width: 100%;
     margin: 5px 0px;
     border-style: dashed;
+    border-width: thin;
 }
 .selection-option button{
     float: right;
