@@ -4,7 +4,7 @@ import countries from './data/countries.geo.json';
 import Data from './Data';
 import Dropdown from './Dropdown';
 import Selection from './Selection';
-import { Map, TileLayer, Marker, Popup, Polygon, GeoJSON} from 'react-leaflet';
+import { Map, TileLayer, Marker, Popup, Polygon, GeoJSON, CircleMarker} from 'react-leaflet';
 import { uniqueValues, sliceByFilter, download, getCountryId } from './util';
 import './App.css';
 
@@ -107,6 +107,18 @@ class App extends Component {
               <Selection value={this.getValueFromType(type)} onClick={()=>this.handleClick(type)}/>
            </div>;
   }
+
+  renderCities() {
+    let layers = [];
+
+    this.state.slice.forEach((feature, index) => {
+
+        layers.push(<CircleMarker key={ index } center={ [feature.lat, feature.lng]} radius={1} />);
+    });
+
+    return layers;
+  }
+
   getStyle(feature, layer) {
     return {
       color: '#006400',
@@ -121,7 +133,7 @@ class App extends Component {
     return (
       <div>
         <header className="App-header">
-          <h1>Traducciónes literarias</h1>
+          <h1>Traducciones literarias</h1>
         </header>
         <div className="App-content">
           <div className="controls">
@@ -132,6 +144,7 @@ class App extends Component {
                     url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
                   />
                 {this.renderGeoJsonLayers()}
+                {this.renderCities()}
               </Map>
             </div>
             <div className="App-dropdown">
