@@ -6,7 +6,19 @@ import Dropdown from './Dropdown';
 import Selection from './Selection';
 import { Map, TileLayer, Marker, Popup, Polygon, GeoJSON, CircleMarker} from 'react-leaflet';
 import { uniqueValues, sliceByFilter, download, getCountryId } from './util';
+import MarkerClusterGroup from 'react-leaflet-markercluster';
 import './App.css';
+import assets from './assets.js';
+
+function EasterEgg(props){
+    let easterStyle = {
+      WebkitTransform: 'translateX(' + props.pos + 'px)',
+      MozTransform: 'translateX(' +props.pos + 'px)'
+    };
+    return (
+        <div className="EasterEgg" style={easterStyle}><img alt="" src={assets[props.image]}/></div>
+    );
+}
 
 class App extends Component {
   constructor(props) {
@@ -22,6 +34,9 @@ class App extends Component {
       lat: 0.0,
       lng: 0.0,
       zoom: 1,
+      index:0,
+      isLoggedIn: false,
+      pos:0,
     }
   }
   handleChange(parent, event) {
@@ -109,14 +124,16 @@ class App extends Component {
   }
 
   renderCities() {
-    let layers = [];
+    let markers = [];
+
 
     this.state.slice.forEach((feature, index) => {
+        //<CircleMarker key={ index } center={ [feature.lat, feature.lng]} radius={1} />
 
-        layers.push(<CircleMarker key={ index } center={ [feature.lat, feature.lng]} radius={1} />);
+        markers.push({ position: [feature.lat, feature.lng] });
     });
 
-    return layers;
+    return <MarkerClusterGroup markers={markers} />;
   }
 
   getStyle(feature, layer) {
@@ -127,18 +144,67 @@ class App extends Component {
     }
   }
 
+    tick(){
+    let pos = this.state.pos;
+    let container = document.body;
+    console.log(container.offsetHeight);
+    let width = container.offsetWidth;
+
+    pos = pos + 3;
+    this.setState({pos:pos});
+
+    if(pos > width) {
+      clearInterval(this.timerID);
+      this.setState({isLoggedIn: false});
+      this.setState({pos:0});
+    }
+    console.log(pos);
+  }
+
+  add(event){
+    let codes = [38,38,40,40,37,39,37,39,65,66];
+    let index = this.state.index;
+    console.log(index);
+    //console.log(event.keyCode);
+    if(codes[index] === event.keyCode){
+      index = index + 1;
+      this.setState({index:index});
+      if(!(index < codes.length)){
+        console.log("Unlocked!");
+        this.setState({index:0});
+        this.setState({isLoggedIn: true});
+        clearInterval(this.timerID);
+        this.setState({pos:0});
+        this.timerID = setInterval(
+            () => this.tick(), 
+            17
+        );
+      }
+    }
+    else {
+      this.setState({index:0});
+    }
+
+  }
+
   render() {
     const position = [this.state.lat, this.state.lng];
+    const isLoggedIn = this.state.isLoggedIn;
+    let easterEgg = null;
 
+    if (isLoggedIn) {
+      let pos = this.state.pos;
+      easterEgg =  <EasterEgg image={"easterImage"} pos={pos}/>
+    }
     return (
-      <div>
+      <div tabIndex="0" onKeyDown={(d) => this.add(d)}>
         <header className="App-header">
           <h1>Traducciones literarias</h1>
         </header>
         <div className="App-content">
           <div className="controls">
             <div>
-              <Map center={position} zoom={this.state.zoom}>
+              <Map center={position} zoom={this.state.zoom} maxZoom={18}>
                   <TileLayer
                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                     url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
@@ -167,6 +233,7 @@ class App extends Component {
             <Data data={this.state.slice}/>
           </div>
         </div>
+        {easterEgg}
       </div>
     );
   }
