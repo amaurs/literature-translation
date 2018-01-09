@@ -26,23 +26,36 @@ class App extends Component {
     
     this.state = {
       filter: [{key:"year", value:"Todos"}, 
-              {key:"genre", value:"Todos"}, 
-              {key:"language", value:"Todos"}, 
-              {key:"country", value:"Todos"}, 
-              {key:"city", value:"Todos"}],
+               {key:"genre", value:"Todos"}, 
+               {key:"language", value:"Todos"}, 
+               {key:"country", value:"Todos"}, 
+               {key:"city", value:"Todos"}],
       slice: books,
       lat: 0.0,
       lng: 0.0,
       zoom: 1,
-      index:0,
+      index: 0,
       isLoggedIn: false,
-      pos:0,
+      pos: 0,
     }
   }
+
+  componentDidMount() {
+    const leafletMap = this.leafletMap.leafletElement;
+    leafletMap.on('zoomend', () => {
+      this.setState({zoom:leafletMap.getZoom()});
+      //console.log('Current zoom level -> ', this.state.zoom);
+    });
+    
+  }
+  /**
+   * Gets called when the selection is changed.
+   */
   handleChange(parent, event) {
     //console.log("Hello change from " + parent + "!");
     //console.log(event.target.value);
-    this.setValueFromType(parent, event.target.value);
+    this.setValueFromType(parent, event.target.value);+
+    console.log('Current zoom level -> ', this.state.zoom);
   }
 
   handleClick(parent) {
@@ -53,6 +66,11 @@ class App extends Component {
   handleDownload(parent) {
     //console.log("Download " + parent + "!");
     download(JSON.stringify(this.state.slice, null, 4), "datos.json", "application/json");
+  }
+
+  handleOnZoomLevelsChange(event) {
+    console.log("Zoom level was changed.");
+    console.log(event);
   }
 
   getValueFromType(type) {
@@ -66,21 +84,17 @@ class App extends Component {
   }
 
   filterCountries() {
-    
     let tokens = uniqueValues(this.state.slice, "country").map(country => getCountryId(country));
-    console.log(tokens);
-
+    //console.log(tokens);
     let copy = JSON.parse(JSON.stringify(countries))
     copy.features = [];
-
     for(let i = 0; i < countries.features.length; i++) {
       if(tokens.indexOf(countries.features[i].id) > -1) {
 
             copy.features.push(JSON.parse(JSON.stringify(countries.features[i])));
       }
     }
-    console.log(copy);
-
+    //console.log(copy);
     return copy;
   }
   renderGeoJsonLayers() {
@@ -96,9 +110,6 @@ class App extends Component {
 
   setValueFromType(type, value) {
     let helper = this.state.filter.slice()
-
-
-
     helper.forEach(function(option){
       if(option.key === type) {
         option.value = value;
@@ -144,7 +155,7 @@ class App extends Component {
     }
   }
 
-    tick(){
+  tick(){
     let pos = this.state.pos;
     let container = document.body;
     console.log(container.offsetHeight);
@@ -204,13 +215,13 @@ class App extends Component {
         <div className="App-content">
           <div className="controls">
             <div>
-              <Map center={position} zoom={this.state.zoom} maxZoom={18}>
+              <Map ref={map => { this.leafletMap = map; }} center={position} zoom={5} maxZoom={18} >
                   <TileLayer
                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                     url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
                   />
                 {this.renderGeoJsonLayers()}
-                {this.renderCities()}
+                
               </Map>
             </div>
             <div className="App-dropdown">
