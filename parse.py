@@ -13,7 +13,7 @@ def address_from_lat_lon(city):
     longitude coordinates.
     '''
     url = 'https://maps.googleapis.com/maps/api/geocode/json?&address=%s' % city
-    print url
+    print(url)
     try:
         response = requests.get(url, timeout=5)
         data = response.json()
@@ -31,6 +31,8 @@ def address_from_lat_lon(city):
 
 def main(path):
     data = []
+    city = {}
+    country = {'Francia':{'lat':46.227638, 'lng':2.213749}}
     with open(path, 'rt') as f:
         reader = csv.reader(f)
         header = next(reader, None)
@@ -41,13 +43,20 @@ def main(path):
             book['year'] = row[3].decode('utf8') if len(row[3].decode('utf8'))>0 else 'Vació'.decode('utf8')
             book['city'] = row[11].decode('utf8') if len(row[11].decode('utf8'))>0 else 'Vació'.decode('utf8')
             book['country'] = row[12].decode('utf8') if len(row[12].decode('utf8'))>0 else 'Vació'.decode('utf8')
+            if not country.get(book['country']):
+                lat, lng = address_from_lat_lon(book['country'])
+                country[book['country']] = {'lat':lat, 'lng':lng}
+            book['lat_country'] = country.get(book['country'])['lat']
+            book['lng_country'] = country.get(book['country'])['lng']
+
             book['language'] = row[13].decode('utf8') if len(row[13].decode('utf8'))>0 else 'Vació'.decode('utf8')
             book['genre'] = row[14].decode('utf8') if len(row[14].decode('utf8'))>0 else 'Vació'.decode('utf8')
-            print book['city']
-            lat, lng = address_from_lat_lon(book['city'])
-            print lat, lng
-            book['lat'] = lat
-            book['lng'] = lng
+            if not city.get(book['city']):
+                lat, lng = address_from_lat_lon(book['city'])
+                city[book['city']] = {'lat':lat, 'lng':lng}
+            book['lat'] = city.get(book['city'])['lat']
+            book['lng'] = city.get(book['city'])['lng']
+
             data.append(book)
 
     json_path = '%s.json' % path.split('.')[0]
