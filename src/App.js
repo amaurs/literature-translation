@@ -4,9 +4,8 @@ import countries from './data/countries.geo.json';
 import Data from './Data';
 import Dropdown from './Dropdown';
 import Selection from './Selection';
-import { Map, TileLayer, Marker, Popup, Polygon, GeoJSON, CircleMarker} from 'react-leaflet';
-import { Counter, uniqueValues, sliceByFilter, download, getCountryId } from './util';
-import MarkerClusterGroup from 'react-leaflet-markercluster';
+import { Map, TileLayer, Popup, GeoJSON, CircleMarker} from 'react-leaflet';
+import { uniqueValues, sliceByFilter, download, getCountryId } from './util';
 import './App.css';
 import assets from './assets.js';
 
@@ -54,7 +53,7 @@ class App extends Component {
   handleChange(parent, event) {
     //console.log("Hello change from " + parent + "!");
     //console.log(event.target.value);
-    this.setValueFromType(parent, event.target.value);+
+    this.setValueFromType(parent, event.target.value);
     console.log('Current zoom level -> ', this.state.zoom);
   }
 
@@ -135,7 +134,6 @@ class App extends Component {
   renderCities() {
     let markers = [];
     let zoomLevel = this.state.zoom;
-    let result = null;
     if(zoomLevel < 5) {
       console.log("Display by country.");
       let countries = {};
@@ -156,7 +154,7 @@ class App extends Component {
         }
       });
       console.log(countries);
-      result = countries;
+      markers = countries;
     }
     else {
       console.log("Display by city");
@@ -177,15 +175,15 @@ class App extends Component {
           cities[feature.city] = aux;
         }
       });
-      result = cities;
+      markers = cities;
     }
 
-    let keys = Object.keys(result);
-    let values = keys.map(function(v) { return result[v]; });
+    let keys = Object.keys(markers);
+    let values = keys.map(function(v) { return markers[v]; });
     console.log(values);
 
     return values.map((value, index) => 
-        <CircleMarker key={ index } center={ value.position } radius={ Math.log(value.count) * 2 + 3 } >
+        <CircleMarker key={ index } center={ value.position } radius={ Math.log(value.count) * 3 + 3 } >
           <Popup>
             <span>{value.name} <br/> {value.count}</span>
           </Popup>
@@ -262,12 +260,14 @@ class App extends Component {
         <div className="App-content">
           <div className="controls">
             <div>
-              <Map ref={map => { this.leafletMap = map; }} center={position} zoom={5} maxZoom={18} >
+              <Map ref={map => { this.leafletMap = map; }} center={position} zoom={this.state.zoom} maxZoom={15} >
                   <TileLayer
                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                     url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
                   />
-                {this.renderGeoJsonLayers()}
+                {
+                //this.renderGeoJsonLayers()
+                }
                 {this.renderCities()}
               </Map>
             </div>
