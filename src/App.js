@@ -99,12 +99,10 @@ class App extends Component {
   }
   renderGeoJsonLayers() {
     let layers = [];
-
     this.filterCountries().features.forEach(feature => {
 
         layers.push(<GeoJSON key={ feature.id } data={ feature } style={this.getStyle}/>);
     });
-
     return layers;
   }
 
@@ -136,14 +134,24 @@ class App extends Component {
 
   renderCities() {
     let markers = [];
+    let zoomLevel = this.state.zoom;
+    if(zoomLevel < 5) {
+      console.log("Display by country.");
+      this.state.slice.forEach((feature, index) => {
+        //<CircleMarker key={ index } center={ [feature.lat, feature.lng]} radius={1} />
 
-
-    this.state.slice.forEach((feature, index) => {
+        markers.push({ position: [feature.lat_country, feature.lng_country] });
+      });
+    }
+    else {
+      console.log("Display by city");
+      this.state.slice.forEach((feature, index) => {
         //<CircleMarker key={ index } center={ [feature.lat, feature.lng]} radius={1} />
 
         markers.push({ position: [feature.lat, feature.lng] });
-    });
-
+      });
+    }
+    
     return <MarkerClusterGroup markers={markers} />;
   }
 
@@ -221,7 +229,7 @@ class App extends Component {
                     url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
                   />
                 {this.renderGeoJsonLayers()}
-                
+                {this.renderCities()}
               </Map>
             </div>
             <div className="App-dropdown">
