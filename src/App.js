@@ -5,7 +5,7 @@ import Data from './Data';
 import Dropdown from './Dropdown';
 import Selection from './Selection';
 import { Map, TileLayer, Marker, Popup, Polygon, GeoJSON, CircleMarker} from 'react-leaflet';
-import { uniqueValues, sliceByFilter, download, getCountryId } from './util';
+import { Counter, uniqueValues, sliceByFilter, download, getCountryId } from './util';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import './App.css';
 import assets from './assets.js';
@@ -135,24 +135,63 @@ class App extends Component {
   renderCities() {
     let markers = [];
     let zoomLevel = this.state.zoom;
+    let result = null;
     if(zoomLevel < 5) {
       console.log("Display by country.");
+      let countries = {};
       this.state.slice.forEach((feature, index) => {
-        //<CircleMarker key={ index } center={ [feature.lat, feature.lng]} radius={1} />
-
-        markers.push({ position: [feature.lat_country, feature.lng_country] });
+        if(countries.hasOwnProperty(feature.country)) {
+          let aux = { 
+                 name: feature.country,
+                 position: [feature.lat_country, feature.lng_country], 
+                 count: countries[feature.country].count + 1};
+          countries[feature.country] = aux;
+        }
+        else {
+          let aux = { 
+                 name: feature.country,
+                 position: [feature.lat_country, feature.lng_country], 
+                 count: 1};
+          countries[feature.country] = aux;
+        }
       });
+      console.log(countries);
+      result = countries;
     }
     else {
       console.log("Display by city");
+      let cities = {};
       this.state.slice.forEach((feature, index) => {
-        //<CircleMarker key={ index } center={ [feature.lat, feature.lng]} radius={1} />
-
-        markers.push({ position: [feature.lat, feature.lng] });
+        if(cities.hasOwnProperty(feature.city)) {
+          let aux = {
+                 name: feature.city,
+                 position: [feature.lat, feature.lng], 
+                 count: cities[feature.city].count + 1};
+          cities[feature.city] = aux;
+        }
+        else {
+          let aux = {
+                 name: feature.city,
+                 position: [feature.lat, feature.lng], 
+                 count: 1};
+          cities[feature.city] = aux;
+        }
       });
+      result = cities;
     }
-    
-    return <MarkerClusterGroup markers={markers} />;
+
+    let keys = Object.keys(result);
+    let values = keys.map(function(v) { return result[v]; });
+    console.log(values);
+
+    return values.map((value, index) => 
+        <CircleMarker key={ index } center={ value.position } radius={ Math.log(value.count) * 2 + 3 } >
+          <Popup>
+            <span>{value.name} <br/> {value.count}</span>
+          </Popup>
+        </CircleMarker>
+    );
+    //return <MarkerClusterGroup markers={markers} />;
   }
 
   getStyle(feature, layer) {
