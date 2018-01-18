@@ -3,3 +3,5 @@ dist
 node_modules
 notas.txt
 build
+exclude.txt
+deploy.sh
