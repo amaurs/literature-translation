@@ -6,7 +6,8 @@ For more information on this project contact Silvia Gutiérrez (segutierrez {at}
 
 # Demo
 
-A bete version of this project is available [here](https://amaurs.com/literatura/)
+A beta version of this project is available [here](https://amaurs.com/literatura/)
+![alt text](/20180112-screenshot.png)
 
 # Installation
 
