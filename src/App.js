@@ -54,7 +54,7 @@ class App extends Component {
     //console.log("Hello change from " + parent + "!");
     //console.log(event.target.value);
     this.setValueFromType(parent, event.target.value);
-    console.log('Current zoom level -> ', this.state.zoom);
+    //console.log('Current zoom level -> ', this.state.zoom);
   }
 
   handleClick(parent) {
@@ -68,8 +68,8 @@ class App extends Component {
   }
 
   handleOnZoomLevelsChange(event) {
-    console.log("Zoom level was changed.");
-    console.log(event);
+    //console.log("Zoom level was changed.");
+    //console.log(event);
   }
 
   getValueFromType(type) {
@@ -114,28 +114,32 @@ class App extends Component {
     });
     this.setState({filter:helper});
     this.setState({slice:sliceByFilter(books, this.state.filter)});
-    
   }
 
   renderDropdown(type) {
     return <div>
                <label>{type}</label>
-               <Dropdown options={uniqueValues(this.state.slice, type)} selectedOption={this.getValueFromType(type)} onChange={(event)=>this.handleChange(type,event)}/>
+               <Dropdown options={uniqueValues(this.state.slice, type)} 
+                         selectedOption={this.getValueFromType(type)} 
+                         onChange={(event)=>this.handleChange(type,event)}/>
            </div>;
   }
 
   renderSelection(type) {
 
     return <div className={"selection-option " + (this.getValueFromType(type)==="Todos"?"Hid":"Vis")}>
-              <Selection value={this.getValueFromType(type)} onClick={()=>this.handleClick(type)}/>
+              <Selection value={this.getValueFromType(type)} 
+                         onClick={()=>this.handleClick(type)}/>
            </div>;
   }
 
   renderCities() {
     let markers = [];
     let zoomLevel = this.state.zoom;
+    let type = null;
     if(zoomLevel < 5) {
       console.log("Display by country.");
+      type = "country";
       let countries = {};
       this.state.slice.forEach((feature, index) => {
         if(countries.hasOwnProperty(feature.country)) {
@@ -159,6 +163,7 @@ class App extends Component {
     else {
       console.log("Display by city");
       let cities = {};
+      type = "city";
       this.state.slice.forEach((feature, index) => {
         if(cities.hasOwnProperty(feature.city)) {
           let aux = {
@@ -183,7 +188,10 @@ class App extends Component {
     console.log(values);
 
     return values.map((value, index) => 
-        <CircleMarker key={ index } center={ value.position } radius={ Math.log(value.count) * 3 + 3 } >
+        <CircleMarker key={ index } 
+                      center={ value.position } 
+                      radius={ Math.log(value.count) * 3 + 3 }
+                      onClick={(e) => this.setValueFromType(type, value.name)} >
           <Popup>
             <span>{value.name} <br/> {value.count}</span>
           </Popup>
