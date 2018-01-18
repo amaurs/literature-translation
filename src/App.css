@@ -1,34 +1,57 @@
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
-}
-
 .App-header {
-  background-color: #222;
   height: 50px;
   width: 100%;
   padding: 10px;
-  color: white;
+  color: black;
   position: fixed;
-  z-index: 100;
+  z-index: 1;
+  text-align: center;
 }
 
-.App-title {
-  font-size: 10px;
+.App-header h1 {
+  position: absolute;
+  left: 0;
+  right: 0;
 }
 
-.App-content {
-  padding-top: 70px;
+.container {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background-color: white;
+  overflow: scroll;
+}
+
+.App-map {
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: -1;
 }
 
 .App-dropdown {
-  width: 50%;
-  float: left;
+  width: 150px;
+  height: 200px;
+  bottom: 10px;
+  left: 10px;
+  
+}
+
+.App-data {
+  width: 300px;
+  height: 300px;
+  bottom: 10px;
+  right: 10px;
 }
 
 .App-selection {
-  width: 50%;
-  float: right;
+  width: 100px;
+  height: 150px;
+  top: 10px;
+  right: 10px;
+  z-index: 5;
 }
 
 .EasterEgg {
@@ -38,19 +61,7 @@
   z-index: 100;
 }
 
-.controls {
-  width: 50%;
-  float: left;
-  height: 100%;
-  position:fixed;
-}
 
-.data {
-  width: 50%;
-  float: right;
-  overflow: scroll;
-  height: 100%;
-}
 
 .selection-option {
     width: 100%;
@@ -62,10 +73,7 @@
     float: right;
 }
 
-.leaflet-container {
-    height: 400px;
-    width: 100%;
-}
+
 
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
