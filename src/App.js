@@ -9,6 +9,9 @@ import { uniqueValues, sliceByFilter, download, getCountryId } from './util';
 import './App.css';
 import assets from './assets.js';
 
+const zoom_threshold = 5;
+
+
 function EasterEgg(props){
     let easterStyle = {
       WebkitTransform: 'translateX(' + props.pos + 'px)',
@@ -68,8 +71,21 @@ class App extends Component {
   }
 
   handleOnZoomLevelsChange(event) {
-    //console.log("Zoom level was changed.");
-    //console.log(event);
+    console.log("Zoom level was changed.");
+    console.log("The zoom level is: " + this.state.zoom);
+    if(this.state.zoom < zoom_threshold) {
+      console.log("The level of zoom is less than the threshold.")
+      this.setValueFromType("country", "Todos");
+    }
+  }
+
+  handleMarkerClick(type, value) {
+    if(this.state.zoom < zoom_threshold) {
+      this.setState({zoom:zoom_threshold});
+    }
+    this.setState({lat:value.position[0]});
+    this.setState({lng:value.position[1]});
+    this.setValueFromType(type, value.name);
   }
 
   getValueFromType(type) {
@@ -134,7 +150,7 @@ class App extends Component {
     let markers = [];
     let zoomLevel = this.state.zoom;
     let type = null;
-    if(zoomLevel < 5) {
+    if(zoomLevel < zoom_threshold) {
       console.log("Display by country.");
       type = "country";
       let countries = {};
@@ -188,7 +204,7 @@ class App extends Component {
         <CircleMarker key={ index } 
                       center={ value.position } 
                       radius={ Math.log(value.count) * 3 + 3 }
-                      onClick={(e) => this.setValueFromType(type, value.name)} >
+                      onClick={(e) => this.handleMarkerClick(type, value)} >
           <Popup>
             <span>{value.name} <br/> {value.count}</span>
           </Popup>
@@ -267,7 +283,8 @@ class App extends Component {
              center={position} 
              zoom={this.state.zoom} 
              maxZoom={15} 
-             minZoom={3} >
+             minZoom={3} 
+             onZoom={(e)=>this.handleOnZoomLevelsChange(e)}>
             <TileLayer
                     attribution='Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
                     url='https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}'

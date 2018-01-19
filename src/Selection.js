@@ -6,12 +6,10 @@ import './Selection.css';
 class Selection extends React.Component {
 
     render() {
-        return <button className={"button is-danger is-pulled-right " + (this.props.value==="Todos"?"is-invisible":"")} onClick={()=>this.props.onClick()}>
-                 <span>{this.props.value}</span>
-                 <span class="icon is-small">
-                   <i class="fas fa-times"></i>
-                 </span>
-               </button>;
+        return <div className={"tags has-addons " + (this.props.value==="Todos"?"is-invisible":"")} >
+                 <span className="tag is-danger">{this.props.value}</span>
+                 <button className="tag is-delete" onClick={()=>this.props.onClick()}></button>
+               </div>;
     }
 }
 
