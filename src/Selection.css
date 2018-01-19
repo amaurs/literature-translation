@@ -1,8 +1,8 @@
 
-.Hid {
+.hidden {
     display: none;
 }
 
-.Vid {
+.visible {
     display: inline;
 }

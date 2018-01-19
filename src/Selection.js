@@ -6,7 +6,12 @@ import './Selection.css';
 class Selection extends React.Component {
 
     render() {
-        return <div className={"Selection-option"} >{this.props.value} <button onClick={()=>this.props.onClick()}>X</button></div>;
+        return <button className={"button is-danger is-pulled-right " + (this.props.value==="Todos"?"is-invisible":"")} onClick={()=>this.props.onClick()}>
+                 <span>{this.props.value}</span>
+                 <span class="icon is-small">
+                   <i class="fas fa-times"></i>
+                 </span>
+               </button>;
     }
 }
 

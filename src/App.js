@@ -117,20 +117,17 @@ class App extends Component {
   }
 
   renderDropdown(type) {
-    return <div>
-               <label>{type}</label>
-               <Dropdown options={uniqueValues(this.state.slice, type)} 
+    return <Dropdown options={uniqueValues(this.state.slice, type)} 
                          selectedOption={this.getValueFromType(type)} 
+                         type={type}
                          onChange={(event)=>this.handleChange(type,event)}/>
-           </div>;
+           
   }
 
   renderSelection(type) {
 
-    return <div className={"selection-option " + (this.getValueFromType(type)==="Todos"?"Hid":"Vis")}>
-              <Selection value={this.getValueFromType(type)} 
+    return <Selection value={this.getValueFromType(type)} 
                          onClick={()=>this.handleClick(type)}/>
-           </div>;
   }
 
   renderCities() {
@@ -269,31 +266,34 @@ class App extends Component {
              ref={map => { this.leafletMap = map; }} 
              center={position} 
              zoom={this.state.zoom} 
-             maxZoom={15} >
+             maxZoom={15} 
+             minZoom={3} >
             <TileLayer
-                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                    url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+                    attribution='Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
+                    url='https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}'
                   />
                 {
                 //this.renderGeoJsonLayers()
                 }
                 {this.renderCities()}
         </Map>
-        <div className="App-dropdown container">
+        <div className="App-dropdown mycontainer vertical">
           {this.renderDropdown("year")}
           {this.renderDropdown("genre")}
           {this.renderDropdown("language")}
           {this.renderDropdown("country")}
           {this.renderDropdown("city")}
         </div>
-        <div className="App-selection container">
-          {this.renderSelection("year")}
-          {this.renderSelection("genre")}
-          {this.renderSelection("language")}
-          {this.renderSelection("country")}
-          {this.renderSelection("city")}
+        <div className="App-selection mycontainer columns ">
+          <div className="column">
+           {this.renderSelection("year")}
+           {this.renderSelection("genre")}
+           {this.renderSelection("language")}
+           {this.renderSelection("country")}
+           {this.renderSelection("city")}
+          </div>
         </div>
-        <div className="App-data container">
+        <div className="App-data mycontainer">
           <button onClick={()=>this.handleDownload("json")}>Descargar json</button>
           <Data data={this.state.slice}/>
         </div>
