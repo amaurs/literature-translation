@@ -35,10 +35,11 @@ class App extends Component {
       slice: books,
       lat: 0.0,
       lng: 0.0,
-      zoom: 4,
+      zoom: 3,
       index: 0,
       isLoggedIn: false,
       pos: 0,
+      modal:false,
     }
   }
 
@@ -86,6 +87,16 @@ class App extends Component {
     this.setState({lat:value.position[0]});
     this.setState({lng:value.position[1]});
     this.setValueFromType(type, value.name);
+  }
+
+  handleModalClose(event){
+    console.log("Modal close click.")
+    this.setState({modal:false});
+  }
+
+  handleInfoClick(book){
+    this.setState({book:book});
+    this.setState({modal:true});
   }
 
   getValueFromType(type) {
@@ -140,6 +151,42 @@ class App extends Component {
            
   }
 
+  renderModal(book, render){
+     
+    if(render){
+      return <div className={"modal is-active"}>
+             <div className="modal-background"></div>
+             <div className="modal-content">
+               <div className="card">
+                 <header className="card-header">
+                   <p className="card-header-title">
+                     {book.title}
+                   </p>
+                   <a className="card-header-icon" aria-label="more options">
+                     <span className="icon">
+                       <i className="fas fa-angle-down" aria-hidden="true"></i>
+                     </span>
+                   </a>
+                 </header>
+                 <div className="card-content">
+                   <div className="content">
+                     <p>{"Año: " + book.year}</p>
+                     <p>{"Género: " + book.genre}</p>
+                     <p>{"País: " + book.country}</p>
+                     <p>{"Ciudad: " + book.city}</p>
+                     <p>{"Idioma: " + book.language}</p>
+                   </div>
+                 </div>
+               </div>
+             </div>
+             <button className="modal-close is-large" aria-label="close" onClick={(e)=>this.handleModalClose(e)}></button>
+           </div>
+    }
+    else{
+      return null
+    }
+  }
+
   renderSelection(type) {
 
     return <Selection value={this.getValueFromType(type)} 
@@ -151,7 +198,7 @@ class App extends Component {
     let zoomLevel = this.state.zoom;
     let type = null;
     if(zoomLevel < zoom_threshold) {
-      console.log("Display by country.");
+      //console.log("Display by country.");
       type = "country";
       let countries = {};
       this.state.slice.forEach((feature, index) => {
@@ -174,7 +221,7 @@ class App extends Component {
       markers = countries;
     }
     else {
-      console.log("Display by city");
+      //console.log("Display by city");
       let cities = {};
       type = "city";
       this.state.slice.forEach((feature, index) => {
@@ -198,17 +245,17 @@ class App extends Component {
 
     let keys = Object.keys(markers);
     let values = keys.map(function(v) { return markers[v]; });
-    console.log(values);
+    //console.log(values);
 
     return values.map((value, index) => 
-        <CircleMarker key={ index } 
-                      center={ value.position } 
-                      radius={ Math.log(value.count) * 3 + 3 }
-                      onClick={(e) => this.handleMarkerClick(type, value)} >
-          <Popup>
-            <span>{value.name} <br/> {value.count}</span>
-          </Popup>
-        </CircleMarker>
+      <CircleMarker key={ index } 
+                    center={ value.position } 
+                    radius={ Math.log(value.count) * 3 + 3 }
+                    onClick={(e) => this.handleMarkerClick(type, value)} >
+        <Popup>
+          <span>{value.name} <br/> {value.count}</span>
+        </Popup>
+      </CircleMarker>
     );
     //return <MarkerClusterGroup markers={markers} />;
   }
@@ -224,7 +271,7 @@ class App extends Component {
   tick(){
     let pos = this.state.pos;
     let container = document.body;
-    console.log(container.offsetHeight);
+    //console.log(container.offsetHeight);
     let width = container.offsetWidth;
 
     pos = pos + 3;
@@ -235,13 +282,13 @@ class App extends Component {
       this.setState({isLoggedIn: false});
       this.setState({pos:0});
     }
-    console.log(pos);
+    //console.log(pos);
   }
 
   add(event){
     let codes = [38,38,40,40,37,39,37,39,65,66];
     let index = this.state.index;
-    console.log(index);
+    //console.log(index);
     //console.log(event.keyCode);
     if(codes[index] === event.keyCode){
       index = index + 1;
@@ -264,6 +311,11 @@ class App extends Component {
 
   }
 
+  exampleFunction(mess){
+    console.log(mess);
+    console.log(this.state);
+  }
+
   render() {
     const position = [this.state.lat, this.state.lng];
     const isLoggedIn = this.state.isLoggedIn;
@@ -273,6 +325,8 @@ class App extends Component {
       let pos = this.state.pos;
       easterEgg =  <EasterEgg image={"easterImage"} pos={pos}/>
     }
+
+
     return (
       <div tabIndex="0" onKeyDown={(d) => this.add(d)}>
         <header className="App-header">
@@ -312,8 +366,9 @@ class App extends Component {
         </div>
         <div className="App-data mycontainer">
           <button onClick={()=>this.handleDownload("json")}>Descargar json</button>
-          <Data data={this.state.slice}/>
+          <Data data={this.state.slice} handleInfoClick={this.handleInfoClick.bind(this)}/>
         </div>
+        {this.renderModal(this.state.book, this.state.modal)}
         {easterEgg}
       </div>
     );
