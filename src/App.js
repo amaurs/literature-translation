@@ -11,7 +11,6 @@ import assets from './assets.js';
 
 const zoom_threshold = 5;
 
-
 function EasterEgg(props){
     let easterStyle = {
       WebkitTransform: 'translateX(' + props.pos + 'px)',
@@ -25,7 +24,6 @@ function EasterEgg(props){
 class App extends Component {
   constructor(props) {
     super(props);
-    
     this.state = {
       filter: [{key:"year", value:"Todos"}, 
                {key:"genre", value:"Todos"}, 
@@ -47,7 +45,6 @@ class App extends Component {
     const leafletMap = this.leafletMap.leafletElement;
     leafletMap.on('zoomend', () => {
       this.setState({zoom:leafletMap.getZoom()});
-      //console.log('Current zoom level -> ', this.state.zoom);
     });
     
   }
@@ -55,27 +52,19 @@ class App extends Component {
    * Gets called when the selection is changed.
    */
   handleChange(parent, event) {
-    //console.log("Hello change from " + parent + "!");
-    //console.log(event.target.value);
     this.setValueFromType(parent, event.target.value);
-    //console.log('Current zoom level -> ', this.state.zoom);
   }
 
   handleClick(parent) {
-    //console.log("Hello change from " + parent + "!");
     this.setValueFromType(parent, "Todos");
   }
 
   handleDownload(parent) {
-    //console.log("Download " + parent + "!");
     download(JSON.stringify(this.state.slice, null, 4), "datos.json", "application/json");
   }
 
   handleOnZoomLevelsChange(event) {
-    console.log("Zoom level was changed.");
-    console.log("The zoom level is: " + this.state.zoom);
     if(this.state.zoom < zoom_threshold) {
-      console.log("The level of zoom is less than the threshold.")
       this.setValueFromType("country", "Todos");
     }
   }
@@ -90,7 +79,6 @@ class App extends Component {
   }
 
   handleModalClose(event){
-    console.log("Modal close click.")
     this.setState({modal:false});
   }
 
@@ -111,36 +99,48 @@ class App extends Component {
 
   filterCountries() {
     let tokens = uniqueValues(this.state.slice, "country").map(country => getCountryId(country));
-    //console.log(tokens);
     let copy = JSON.parse(JSON.stringify(countries))
     copy.features = [];
     for(let i = 0; i < countries.features.length; i++) {
       if(tokens.indexOf(countries.features[i].id) > -1) {
-
             copy.features.push(JSON.parse(JSON.stringify(countries.features[i])));
       }
     }
-    //console.log(copy);
     return copy;
   }
-  renderGeoJsonLayers() {
-    let layers = [];
-    this.filterCountries().features.forEach(feature => {
 
-        layers.push(<GeoJSON key={ feature.id } data={ feature } style={this.getStyle}/>);
-    });
-    return layers;
-  }
-
+  /**
+  The filter object is copied and the value that is accessed is updated,
+  the slice with the filter in the information is updated as well.
+  **/
   setValueFromType(type, value) {
-    let helper = this.state.filter.slice()
+    let helper = this.state.filter.slice();
+    let changed = false;
     helper.forEach(function(option){
       if(option.key === type) {
         option.value = value;
+        changed =  true;
       }
     });
     this.setState({filter:helper});
-    this.setState({slice:sliceByFilter(books, this.state.filter)});
+
+    if(changed){
+      // Maybe this shouldn't happend every time the filter changes?
+      // Now I only do it if the selection actualy changed.
+      let newSlice = sliceByFilter(books, this.state.filter);
+      
+      this.setState({slice:newSlice});
+
+      console.log("This is the checkpoint.")
+    }
+  }
+
+  renderGeoJsonLayers() {
+    let layers = [];
+    this.filterCountries().features.forEach(feature => {
+        layers.push(<GeoJSON key={ feature.id } data={ feature } style={this.getStyle}/>);
+    });
+    return layers;
   }
 
   renderDropdown(type) {
@@ -190,7 +190,7 @@ class App extends Component {
   renderSelection(type) {
 
     return <Selection value={this.getValueFromType(type)} 
-                         onClick={()=>this.handleClick(type)}/>
+                      onClick={()=>this.handleClick(type)}/>
   }
 
   renderCities() {
@@ -221,7 +221,6 @@ class App extends Component {
       markers = countries;
     }
     else {
-      //console.log("Display by city");
       let cities = {};
       type = "city";
       this.state.slice.forEach((feature, index) => {
@@ -245,7 +244,6 @@ class App extends Component {
 
     let keys = Object.keys(markers);
     let values = keys.map(function(v) { return markers[v]; });
-    //console.log(values);
 
     return values.map((value, index) => 
       <CircleMarker key={ index } 
@@ -257,7 +255,6 @@ class App extends Component {
         </Popup>
       </CircleMarker>
     );
-    //return <MarkerClusterGroup markers={markers} />;
   }
 
   getStyle(feature, layer) {
@@ -271,7 +268,6 @@ class App extends Component {
   tick(){
     let pos = this.state.pos;
     let container = document.body;
-    //console.log(container.offsetHeight);
     let width = container.offsetWidth;
 
     pos = pos + 3;
@@ -282,14 +278,11 @@ class App extends Component {
       this.setState({isLoggedIn: false});
       this.setState({pos:0});
     }
-    //console.log(pos);
   }
 
   add(event){
     let codes = [38,38,40,40,37,39,37,39,65,66];
     let index = this.state.index;
-    //console.log(index);
-    //console.log(event.keyCode);
     if(codes[index] === event.keyCode){
       index = index + 1;
       this.setState({index:index});
@@ -308,7 +301,6 @@ class App extends Component {
     else {
       this.setState({index:0});
     }
-
   }
 
   exampleFunction(mess){
@@ -320,12 +312,10 @@ class App extends Component {
     const position = [this.state.lat, this.state.lng];
     const isLoggedIn = this.state.isLoggedIn;
     let easterEgg = null;
-
     if (isLoggedIn) {
       let pos = this.state.pos;
       easterEgg =  <EasterEgg image={"easterImage"} pos={pos}/>
     }
-
 
     return (
       <div tabIndex="0" onKeyDown={(d) => this.add(d)}>
@@ -343,9 +333,6 @@ class App extends Component {
                     attribution='Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
                     url='https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}'
                   />
-                {
-                //this.renderGeoJsonLayers()
-                }
                 {this.renderCities()}
         </Map>
         <div className="App-dropdown mycontainer vertical">
@@ -368,7 +355,6 @@ class App extends Component {
           <button onClick={()=>this.handleDownload("json")}>Descargar json</button>
           <Data data={this.state.slice} handleInfoClick={this.handleInfoClick.bind(this)}/>
         </div>
-        {this.renderModal(this.state.book, this.state.modal)}
         {easterEgg}
       </div>
     );

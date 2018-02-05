@@ -2,11 +2,12 @@ import React from 'react';
 
 class Data extends React.Component {
     render() {
-
-        const rows = this.props.data.map((book, index) => 
+        let shortBooks = this.props.data.slice(0,10);
+        const rows = shortBooks.map((book, index) => 
+                
                 <tr key={index}>
                   <td>{book.title}</td>
-                  <td><button className="button" onClick={()=> this.props.handleInfoClick(book)}>
+                  <td><button className="button">
                         <span className="icon">
                           <i className="fas fa-search"></i>
                         </span>
