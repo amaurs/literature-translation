@@ -4,10 +4,12 @@ import countries from './data/countries.geo.json';
 import Data from './Data';
 import Dropdown from './Dropdown';
 import Selection from './Selection';
+import InputRange from 'react-input-range';
 import { Map, TileLayer, Popup, GeoJSON, CircleMarker} from 'react-leaflet';
 import { uniqueValues, sliceByFilter, download, getCountryId } from './util';
 import './App.css';
 import assets from './assets.js';
+import 'react-input-range/lib/css/index.css';
 
 const zoom_threshold = 5;
 
@@ -25,8 +27,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      filter: [{key:"year", value:"Todos"}, 
-               {key:"genre", value:"Todos"}, 
+      filter: [{key:"genre", value:"Todos"}, 
                {key:"language", value:"Todos"}, 
                {key:"country", value:"Todos"}, 
                {key:"city", value:"Todos"}],
@@ -38,6 +39,7 @@ class App extends Component {
       isLoggedIn: false,
       pos: 0,
       modal:false,
+      value:{ min: 1986, max: 1990 },
     }
   }
 
@@ -67,6 +69,16 @@ class App extends Component {
     if(this.state.zoom < zoom_threshold) {
       this.setValueFromType("country", "Todos");
     }
+  }
+
+  handleSliderChange(value){
+    this.setState({value:value});
+
+    let newSlice = sliceByFilter(books, this.state.filter, this.state.value);
+    
+    this.setState({slice:newSlice});
+
+    console.log("This is the checkpoint.")
   }
 
   handleMarkerClick(type, value) {
@@ -127,7 +139,7 @@ class App extends Component {
     if(changed){
       // Maybe this shouldn't happend every time the filter changes?
       // Now I only do it if the selection actualy changed.
-      let newSlice = sliceByFilter(books, this.state.filter);
+      let newSlice = sliceByFilter(books, this.state.filter, this.state.value);
       
       this.setState({slice:newSlice});
 
@@ -341,6 +353,11 @@ class App extends Component {
           {this.renderDropdown("language")}
           {this.renderDropdown("country")}
           {this.renderDropdown("city")}
+          <InputRange
+            minValue={1900}
+            maxValue={2020}
+            value={this.state.value}
+            onChange={value => this.handleSliderChange(value)} />
         </div>
         <div className="App-selection mycontainer columns ">
           <div className="column">

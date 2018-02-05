@@ -7,34 +7,26 @@ function uniqueValues(array, column) {
     return Array.from(new Set(returnArray)).sort();
 }
 
-function sliceByFilter(array, filters) {
-    //console.log("Slice by Filter");
-
-    let result = [];
-    array.forEach(function(element){
-        let add = true;
-        filters.forEach(function(filter){
-            if(filter.value !== "Todos") {
-                if(filter.key === "year"){
-                    if(parseInt(element[filter.key], 10) < parseInt(filter.value, 10)){
-                        add &= false;
-                        //console.log(parseInt(element[filter.key]) + " <= "+ parseInt(filter.value));
-    
-                    }
-                } else {
-                    if(element[filter.key] !== filter.value){
-                        add &= false;
-                        //console.log(element[filter.key] + "!==" + filter.value);
-                    }
-                }
-            }
-        });
-        if(add){
-            result.push(element);
+function sliceByFilter(array, filters, yearFilter) {
+  let result = [];
+  array.forEach(function(element){
+    let add = true;
+    if(parseInt(element["year"], 10) < parseInt(yearFilter.max, 10) && 
+       parseInt(element["year"], 10) > parseInt(yearFilter.min, 10)){
+      filters.forEach(function(filter){
+        if(filter.value !== "Todos") {
+          if(element[filter.key] !== filter.value){
+            add &= false;
+          }
         }
-    });
-    console.log(result.length)
-    return result;
+      });
+      if(add){
+        result.push(element);
+      }
+    }
+
+  });
+  return result;
 }
 
 function download(data, filename, mime) {
