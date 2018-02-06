@@ -27,6 +27,20 @@ function EasterEgg(props){
 class App extends Component {
   constructor(props) {
     super(props);
+
+    let years = [];
+    uniqueValues(books, "year").forEach(function(year){
+      if(!isNaN(year)) {
+        if(year > 0) {
+          years.push(+year);
+        }
+      }
+    });
+
+    this.minYear = Math.min.apply(Math, years);
+    this.maxYear = Math.max.apply(Math, years);
+
+
     this.state = {
       filter: [{key:"genre", value:"Todos"}, 
                {key:"language", value:"Todos"}, 
@@ -40,13 +54,15 @@ class App extends Component {
       isLoggedIn: false,
       pos: 0,
       modal:false,
-      value:{ min: 1986, max: 1990 },
+      value:{ min: this.minYear, max: this.maxYear },
       currentPage:1,
     }
   }
 
   componentDidMount() {
     const leafletMap = this.leafletMap.leafletElement;
+
+    
     leafletMap.on('zoomend', () => {
       this.setState({zoom:leafletMap.getZoom()});
     });
@@ -316,6 +332,8 @@ class App extends Component {
       let pos = this.state.pos;
       easterEgg =  <EasterEgg image={"easterImage"} pos={pos}/>
     }
+    console.log(this.minYear);
+    console.log(this.maxYear);
 
     return (
       <div tabIndex="0" onKeyDown={(d) => this.renderEasterEgg(d)}>
@@ -341,26 +359,24 @@ class App extends Component {
           </div>
           <div className="App-slider mycontainer">
             <InputRange
-              minValue={1900}
-              maxValue={2020}
+              minValue={this.minYear}
+              maxValue={this.maxYear}
               value={this.state.value}
               onChange={value => this.handleSliderChange(value)} />
           </div>
-          <div className="App-selection mycontainer columns ">
-            <div className="column">
-             {this.renderSelection("genre")}
-             {this.renderSelection("language")}
-             {this.renderSelection("country")}
-             {this.renderSelection("city")}
-            </div>
+          <div className="App-selection mycontainer">
+            {this.renderSelection("genre")}
+            {this.renderSelection("language")}
+            {this.renderSelection("country")}
+            {this.renderSelection("city")}
           </div>
         </div>
         <div className="App-data">
           <Data data={this.state.slice} 
-                handleDownload={this.handleDownload.bind(this)}
-                handleNextPage={this.handleNextPage.bind(this)}
-                pageSize={pageSize}
-                currentPage={this.state.currentPage}/>
+            handleDownload={this.handleDownload.bind(this)}
+            handleNextPage={this.handleNextPage.bind(this)}
+            pageSize={pageSize}
+            currentPage={this.state.currentPage}/>
         </div>
         {easterEgg}
       </div>

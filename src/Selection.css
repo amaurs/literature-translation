@@ -1,8 +1,17 @@
 
 .hidden {
-    display: none;
+  display: none;
 }
 
 .visible {
-    display: inline;
+  display: inline;
 }
+
+.Selection {
+  width: 100%;
+}
+
+.Selection button {
+  float:right;
+}
+

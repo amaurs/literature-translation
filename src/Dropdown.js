@@ -38,14 +38,14 @@ class Dropdown extends React.Component {
         }
 
         return <div className="field has-addons">
-                <div className="control is-full-width">
+                <div className="Dropdown-control control ">
 
-                  <div className="select">
-                   <select value={this.props.selectedOption} 
-                           onChange={(event)=>this.props.onChange(event)}>{items}
-                   </select>
-                  </div>
-                  <span className="icon"><i className={"fas " + icon}></i></span>
+                  <span className="icon Dropdown-icon"><i className={"fas " + icon}></i></span>
+        
+                  <select className="select Dropdown-select is-four-fifths" value={this.props.selectedOption} 
+                          onChange={(event)=>this.props.onChange(event)}>{items}
+                  </select>
+                  
                 </div>
                </div>
     }

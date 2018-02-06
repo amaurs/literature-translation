@@ -47,8 +47,18 @@
 }
 
 .App-dropdown {
-  bottom: 10px;
-  left: 10px;
+  width: 40%;
+  margin: 20px;
+  bottom: 0px;
+  left: 0px;
+}
+
+.App-selection {
+  width: 20%;
+  padding: 20px;
+  bottom: 0px;
+  right: 0px;
+  z-index: 5;
 }
 
 .App-slider {
@@ -78,15 +88,8 @@
   transform: scale(1) !important  ;
 }
 
-
-
-.App-selection {
-  top: 10px;
-  right: 10px;
-  z-index: 5;
-}
-
-.fill {
+.input-range__label {
+  color: black !important;
 }
 
 .EasterEgg {

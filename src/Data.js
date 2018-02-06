@@ -3,7 +3,6 @@ import React from 'react';
 class Data extends React.Component {
 
 
-
     render() {
         let init = (this.props.currentPage - 1) * this.props.pageSize;
         let end = this.props.pageSize * ( (this.props.currentPage - 1) + 1);
@@ -67,7 +66,7 @@ class Data extends React.Component {
 }
 
 function pagination(currentPage, nrOfPages) {
-    let delta = 3,
+    let delta = 2,
         range = [],
         rangeWithDots = [],
         l;

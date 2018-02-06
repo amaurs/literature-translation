@@ -1,3 +1,14 @@
-.Dropdown {
-    width:100%;
+
+
+.Dropdown-control {
+  width:100%;
+  height:100%;
+}
+
+.Dropdown-select {
+  width:100%;
+}
+
+.Dropdown-icon {
+  float:left;
 }
