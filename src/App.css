@@ -61,6 +61,17 @@
   z-index: 15;
 }
 
+.App-buttons {
+  position: absolute;
+  bottom:0;
+  margin:20px;
+}
+
+.App-table {
+  height: 100%;
+  overflow: auto;
+}
+
 .input-range__slider:active {
   -webkit-transform: scale(1) !important;
   -ms-transform: scale(1) !important;

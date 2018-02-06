@@ -12,6 +12,7 @@ import assets from './assets.js';
 import 'react-input-range/lib/css/index.css';
 
 const zoom_threshold = 5;
+const pageSize = 10;
 
 function EasterEgg(props){
     let easterStyle = {
@@ -40,6 +41,7 @@ class App extends Component {
       pos: 0,
       modal:false,
       value:{ min: 1986, max: 1990 },
+      currentPage:1,
     }
   }
 
@@ -89,9 +91,8 @@ class App extends Component {
     this.setState({modal:false});
   }
 
-  handleInfoClick(book) {
-    this.setState({book:book});
-    this.setState({modal:true});
+  handleNextPage(page) {
+    this.setState({currentPage:page});
   }
 
   getValueFromType(type) {
@@ -140,7 +141,7 @@ class App extends Component {
 
   updateSlice() {
     let newSlice = sliceByFilter(books, this.state.filter, this.state.value);
-    this.setState({slice:newSlice});
+    this.setState({slice:newSlice, currentPage:1});
   }
 
   renderGeoJsonLayers() {
@@ -355,8 +356,11 @@ class App extends Component {
           </div>
         </div>
         <div className="App-data">
-          <button onClick={()=>this.handleDownload("json")}>Descargar json</button>
-          <Data data={this.state.slice} handleInfoClick={this.handleInfoClick.bind(this)}/>
+          <Data data={this.state.slice} 
+                handleDownload={this.handleDownload.bind(this)}
+                handleNextPage={this.handleNextPage.bind(this)}
+                pageSize={pageSize}
+                currentPage={this.state.currentPage}/>
         </div>
         {easterEgg}
       </div>
