@@ -7,21 +7,23 @@ class Data extends React.Component {
                 
                 <tr key={index}>
                   <td>{book.title}</td>
-                  <td><button className="button">
-                        <span className="icon">
-                          <i className="fas fa-search"></i>
-                        </span>
-                      </button>
-                  </td>
+                  <td>{book.year}</td>
+                  <td>{book.genre}</td>
+                  <td>{book.country}</td>
+                  <td>{book.city}</td>
+                  <td>{book.language}</td>
                 </tr>
                 
             );
-
         return <table className="table">
                  <thead>
                    <tr>
                      <th>Título</th>
-                     <th>Información</th>
+                     <th>Año</th>
+                     <th>Género</th>
+                     <th>País</th>
+                     <th>Ciudad</th>
+                     <th>Idioma</th>
                    </tr>
                  </thead>
                  <tbody>

@@ -22,33 +22,52 @@
   overflow: scroll;
 }
 
-.App-map-container {
-  width: 70%;
+.App-map-and-controls {
+  width:60%;
   height: 100%;
-  float: left;
+  position: absolute;
+  left: 0;
 }
 
 .App-map {
+  height: 100%;
   position: absolute;
-  bottom: 0;
-  top: 0;
   left: 0;
   right: 0;
+  bottom: 0;
+  top:0;
   z-index: -1;
+}
+
+.App-data {
+  position: absolute;
+  width: 40%;
+  height: 100%;
+  right: 0px;
 }
 
 .App-dropdown {
   bottom: 10px;
   left: 10px;
-  
 }
 
-.App-data {
-  width: 400px;
-  height: 50%;
-  bottom: 10px;
-  right: 10px;
+.App-slider {
+  position: absolute;
+  width: 50%;
+  top: 20px;
+  margin: 20px;
+  padding: 20px;
+  transform: translateX(50%);
+  z-index: 15;
 }
+
+.input-range__slider:active {
+  -webkit-transform: scale(1) !important;
+  -ms-transform: scale(1) !important;
+  transform: scale(1) !important  ;
+}
+
+
 
 .App-selection {
   top: 10px;

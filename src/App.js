@@ -71,14 +71,9 @@ class App extends Component {
     }
   }
 
-  handleSliderChange(value){
+  handleSliderChange(value) {
     this.setState({value:value});
-
-    let newSlice = sliceByFilter(books, this.state.filter, this.state.value);
-    
-    this.setState({slice:newSlice});
-
-    console.log("This is the checkpoint.")
+    this.updateSlice();
   }
 
   handleMarkerClick(type, value) {
@@ -90,11 +85,11 @@ class App extends Component {
     this.setValueFromType(type, value.name);
   }
 
-  handleModalClose(event){
+  handleModalClose(event) {
     this.setState({modal:false});
   }
 
-  handleInfoClick(book){
+  handleInfoClick(book) {
     this.setState({book:book});
     this.setState({modal:true});
   }
@@ -139,12 +134,13 @@ class App extends Component {
     if(changed){
       // Maybe this shouldn't happend every time the filter changes?
       // Now I only do it if the selection actualy changed.
-      let newSlice = sliceByFilter(books, this.state.filter, this.state.value);
-      
-      this.setState({slice:newSlice});
-
-      console.log("This is the checkpoint.")
+      this.updateSlice();
     }
+  }
+
+  updateSlice() {
+    let newSlice = sliceByFilter(books, this.state.filter, this.state.value);
+    this.setState({slice:newSlice});
   }
 
   renderGeoJsonLayers() {
@@ -162,9 +158,7 @@ class App extends Component {
                          onChange={(event)=>this.handleChange(type,event)}/>
            
   }
-
   renderModal(book, render){
-     
     if(render){
       return <div className={"modal is-active"}>
              <div className="modal-background"></div>
@@ -229,7 +223,6 @@ class App extends Component {
           countries[feature.country] = aux;
         }
       });
-      console.log(countries);
       markers = countries;
     }
     else {
@@ -292,14 +285,13 @@ class App extends Component {
     }
   }
 
-  add(event){
+  renderEasterEgg(event){
     let codes = [38,38,40,40,37,39,37,39,65,66];
     let index = this.state.index;
     if(codes[index] === event.keyCode){
       index = index + 1;
       this.setState({index:index});
       if(!(index < codes.length)){
-        console.log("Unlocked!");
         this.setState({index:0});
         this.setState({isLoggedIn: true});
         clearInterval(this.timerID);
@@ -315,11 +307,6 @@ class App extends Component {
     }
   }
 
-  exampleFunction(mess){
-    console.log(mess);
-    console.log(this.state);
-  }
-
   render() {
     const position = [this.state.lat, this.state.lng];
     const isLoggedIn = this.state.isLoggedIn;
@@ -330,45 +317,44 @@ class App extends Component {
     }
 
     return (
-      <div tabIndex="0" onKeyDown={(d) => this.add(d)}>
-        <header className="App-header">
-          <h1>Traducciones literarias</h1>
-        </header>
-        <Map className="App-map" 
-             ref={map => { this.leafletMap = map; }} 
-             center={position} 
-             zoom={this.state.zoom} 
-             maxZoom={15} 
-             minZoom={3} 
-             onZoom={(e)=>this.handleOnZoomLevelsChange(e)}>
-            <TileLayer
-                    attribution='Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
-                    url='https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}'
-                  />
-                {this.renderCities()}
-        </Map>
-        <div className="App-dropdown mycontainer vertical">
-          {this.renderDropdown("year")}
-          {this.renderDropdown("genre")}
-          {this.renderDropdown("language")}
-          {this.renderDropdown("country")}
-          {this.renderDropdown("city")}
-          <InputRange
-            minValue={1900}
-            maxValue={2020}
-            value={this.state.value}
-            onChange={value => this.handleSliderChange(value)} />
-        </div>
-        <div className="App-selection mycontainer columns ">
-          <div className="column">
-           {this.renderSelection("year")}
-           {this.renderSelection("genre")}
-           {this.renderSelection("language")}
-           {this.renderSelection("country")}
-           {this.renderSelection("city")}
+      <div tabIndex="0" onKeyDown={(d) => this.renderEasterEgg(d)}>
+        <div className="App-map-and-controls">
+          <Map className="App-map" 
+               ref={map => { this.leafletMap = map; }} 
+               center={position} 
+               zoom={this.state.zoom} 
+               maxZoom={15} 
+               minZoom={3} 
+               onZoom={(e)=>this.handleOnZoomLevelsChange(e)}>
+              <TileLayer
+                      attribution='Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
+                      url='https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}'
+                    />
+                  {this.renderCities()}
+          </Map>
+          <div className="App-dropdown mycontainer vertical">
+            {this.renderDropdown("genre")}
+            {this.renderDropdown("language")}
+            {this.renderDropdown("country")}
+            {this.renderDropdown("city")}
+          </div>
+          <div className="App-slider mycontainer">
+            <InputRange
+              minValue={1900}
+              maxValue={2020}
+              value={this.state.value}
+              onChange={value => this.handleSliderChange(value)} />
+          </div>
+          <div className="App-selection mycontainer columns ">
+            <div className="column">
+             {this.renderSelection("genre")}
+             {this.renderSelection("language")}
+             {this.renderSelection("country")}
+             {this.renderSelection("city")}
+            </div>
           </div>
         </div>
-        <div className="App-data mycontainer">
+        <div className="App-data">
           <button onClick={()=>this.handleDownload("json")}>Descargar json</button>
           <Data data={this.state.slice} handleInfoClick={this.handleInfoClick.bind(this)}/>
         </div>

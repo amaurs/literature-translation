@@ -6,7 +6,11 @@ function uniqueValues(array, column) {
     });
     return Array.from(new Set(returnArray)).sort();
 }
-
+/**
+There are two types of filters, the normal ones, and the year. We first
+see if the current book is in between the given years, and then we check
+if the other filters are met.
+**/
 function sliceByFilter(array, filters, yearFilter) {
   let result = [];
   array.forEach(function(element){
@@ -24,7 +28,6 @@ function sliceByFilter(array, filters, yearFilter) {
         result.push(element);
       }
     }
-
   });
   return result;
 }
