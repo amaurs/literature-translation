@@ -8,6 +8,7 @@ import InputRange from 'react-input-range';
 import { Map, TileLayer, Popup, GeoJSON, CircleMarker} from 'react-leaflet';
 import { uniqueValues, sliceByFilter, download, getCountryId } from './util';
 import './App.css';
+import json2csv from 'json2csv';
 import assets from './assets.js';
 import 'react-input-range/lib/css/index.css';
 
@@ -80,7 +81,9 @@ class App extends Component {
   }
 
   handleDownload(parent) {
-    download(JSON.stringify(this.state.slice, null, 4), "datos.json", "application/json");
+    let fields = ["title","genre","country","city","year","language"];
+    let csv = json2csv({ data: this.state.slice, fields: fields });
+    download(csv, "datos.csv", "text/csv");
   }
 
   handleOnZoomLevelsChange(event) {

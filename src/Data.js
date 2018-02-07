@@ -58,7 +58,7 @@ class Data extends React.Component {
                  </table>
                  <div className="App-buttons">
                     <button className="button is-danger" 
-                         onClick={()=>this.props.handleDownload("json")}>Descargar json</button>
+                         onClick={()=>this.props.handleDownload()}>Descargar csv</button>
                     {buttons}
                  </div>
                </div>

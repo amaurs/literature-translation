@@ -33,22 +33,21 @@ function sliceByFilter(array, filters, yearFilter) {
 }
 
 function download(data, filename, mime) {
-    let blob = new Blob([data], {type: mime || 'application/octet-stream'});
-    let blobURL = window.URL.createObjectURL(blob);
-    let tempLink = document.createElement('a');
-    tempLink.style.display = 'none';
-    tempLink.href = blobURL;
-    tempLink.setAttribute('download', filename); 
-    
-    // Safari only
-    if (typeof tempLink.download === 'undefined') {
-        tempLink.setAttribute('target', '_blank');
-    }
-    
-    document.body.appendChild(tempLink);
-    tempLink.click();
-    document.body.removeChild(tempLink);
-    window.URL.revokeObjectURL(blobURL);
+  let blob = new Blob([data], {type: mime || 'application/octet-stream'});
+  let blobURL = window.URL.createObjectURL(blob);
+  let tempLink = document.createElement('a');
+  tempLink.style.display = 'none';
+  tempLink.href = blobURL;
+  tempLink.setAttribute('download', filename); 
+  
+  if (typeof tempLink.download === 'undefined') {
+    tempLink.setAttribute('target', '_blank');
+  }
+  
+  document.body.appendChild(tempLink);
+  tempLink.click();
+  document.body.removeChild(tempLink);
+  window.URL.revokeObjectURL(blobURL);
 }
 
 
