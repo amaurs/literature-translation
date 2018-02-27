@@ -6,10 +6,11 @@ import Dropdown from './Dropdown';
 import Selection from './Selection';
 import InputRange from 'react-input-range';
 import { Map, TileLayer, Popup, GeoJSON, CircleMarker} from 'react-leaflet';
-import { uniqueValues, sliceByFilter, download, getCountryId } from './util';
+import { yearMap, uniqueValues, sliceByFilter, download, getCountryId } from './util';
 import './App.css';
 import json2csv from 'json2csv';
 import assets from './assets.js';
+import Chart from './Chart'
 import 'react-input-range/lib/css/index.css';
 
 const zoom_threshold = 5;
@@ -29,18 +30,21 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    let years = [];
-    uniqueValues(books, "year").forEach(function(year){
-      if(!isNaN(year)) {
-        if(year > 0) {
-          years.push(+year);
-        }
-      }
-    });
+    let yearsObj = yearMap(books);
+    delete yearsObj[0];
+    let years = Object.keys(yearsObj);
+    console.log(years);
+    let data = [];
+    
+
 
     this.minYear = Math.min.apply(Math, years);
     this.maxYear = Math.max.apply(Math, years);
 
+
+    for(let year = this.minYear; year < this.maxYear + 1; year++) {
+        data.push({name:year, value:(yearsObj[year]?yearsObj[year]:0)});
+    }
 
     this.state = {
       filter: [{key:"genre", value:"Todos"}, 
@@ -48,6 +52,7 @@ class App extends Component {
                {key:"country", value:"Todos"}, 
                {key:"city", value:"Todos"}],
       slice: books,
+      chartData: data,
       lat: 0.0,
       lng: 0.0,
       zoom: 3,
@@ -63,7 +68,8 @@ class App extends Component {
   componentDidMount() {
     const leafletMap = this.leafletMap.leafletElement;
 
-    
+    console.log("Inside component did mount.");
+
     leafletMap.on('zoomend', () => {
       this.setState({zoom:leafletMap.getZoom()});
     });
@@ -94,6 +100,7 @@ class App extends Component {
 
   handleSliderChange(value) {
     this.setState({value:value});
+    console.log(this.state.value);
     this.updateSlice();
   }
 
@@ -335,8 +342,6 @@ class App extends Component {
       let pos = this.state.pos;
       easterEgg =  <EasterEgg image={"easterImage"} pos={pos}/>
     }
-    console.log(this.minYear);
-    console.log(this.maxYear);
 
     return (
       <div tabIndex="0" onKeyDown={(d) => this.renderEasterEgg(d)}>
@@ -361,6 +366,8 @@ class App extends Component {
             {this.renderDropdown("city")}
           </div>
           <div className="App-slider mycontainer">
+            <Chart data={this.state.chartData}
+                value={this.state.value}/>
             <InputRange
               minValue={this.minYear}
               maxValue={this.maxYear}
@@ -381,6 +388,7 @@ class App extends Component {
             pageSize={pageSize}
             currentPage={this.state.currentPage}/>
         </div>
+        
         {easterEgg}
       </div>
     );

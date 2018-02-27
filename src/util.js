@@ -1,11 +1,28 @@
 
 function uniqueValues(array, column) {
-    let returnArray = ['Todos'];
+    let returnArray = ["Todos"];
     array.forEach(function(element) {
         returnArray.push(element[column]);
     });
     return Array.from(new Set(returnArray)).sort();
 }
+
+
+function yearMap(array) {
+    let years = {};
+
+    array.forEach(function(element) {
+        let year = element["year"]
+        if(!(year in years)){
+            years[year] = 1;
+        }
+        else{
+            years[year]++;
+        }
+    });
+    return years;
+}
+
 /**
 There are two types of filters, the normal ones, and the year. We first
 see if the current book is in between the given years, and then we check
@@ -242,4 +259,4 @@ function getCountryId(name) {
 
 
 
-export { uniqueValues, sliceByFilter, getCountryId, download };
+export { yearMap, uniqueValues, sliceByFilter, getCountryId, download };
