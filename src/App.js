@@ -73,8 +73,17 @@ class App extends Component {
     leafletMap.on('zoomend', () => {
       this.setState({zoom:leafletMap.getZoom()});
     });
-    
+    this.updateDimensions();
+    window.addEventListener("resize", this.updateDimensions.bind(this));
   }
+
+  updateDimensions(){
+    let update_width  = window.innerWidth;
+    let update_height = window.innerHeight;
+    this.setState({ width: update_width, height: update_height });
+  }
+
+
   /**
    * Gets called when the selection is changed.
    */
