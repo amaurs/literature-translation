@@ -8,6 +8,22 @@ function uniqueValues(array, column) {
 }
 
 function mapValues(array, column) {
+    let returnObject = {"Todos":0};
+
+    array.forEach(function(element) {
+        let item = element[column]
+        returnObject["Todos"]++;
+        if(!(item in returnObject)){
+            returnObject[item] = 1;
+        }
+        else{
+            returnObject[item]++;
+        }
+    });
+    return returnObject;
+}
+
+function mapValuesYear(array, column) {
     let returnObject = {};
 
     array.forEach(function(element) {
@@ -21,6 +37,7 @@ function mapValues(array, column) {
     });
     return returnObject;
 }
+
 
 
 /**
@@ -259,4 +276,4 @@ function getCountryId(name) {
 
 
 
-export { mapValues, uniqueValues, sliceByFilter, getCountryId, download };
+export { mapValuesYear, mapValues, uniqueValues, sliceByFilter, getCountryId, download };

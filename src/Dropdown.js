@@ -46,7 +46,7 @@ class Dropdown extends React.Component {
 
 function Option(props) {
     return (
-        <option value={props.value}>{props.value + " (" + props.size + ")"}</option>
+        <option value={props.value}>{props.value + " ("+ props.size +")"}</option>
     );
 }
 

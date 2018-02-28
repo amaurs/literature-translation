@@ -6,7 +6,7 @@ import Dropdown from './Dropdown';
 import Selection from './Selection';
 import InputRange from 'react-input-range';
 import { Map, TileLayer, Popup, GeoJSON, CircleMarker} from 'react-leaflet';
-import { mapValues, uniqueValues, sliceByFilter, download, getCountryId } from './util';
+import { mapValuesYear, mapValues, uniqueValues, sliceByFilter, download, getCountryId } from './util';
 import './App.css';
 import json2csv from 'json2csv';
 import assets from './assets.js';
@@ -30,7 +30,7 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    let yearsObj = mapValues(books, "year");
+    let yearsObj = mapValuesYear(books, "year");
     delete yearsObj[0];
     let years = Object.keys(yearsObj);
     console.log(years);
@@ -59,7 +59,7 @@ class App extends Component {
       index: 0,
       isLoggedIn: false,
       pos: 0,
-      modal:false,
+      showData: false,
       value:{ min: this.minYear, max: this.maxYear },
       currentPage:1,
     }
@@ -69,6 +69,8 @@ class App extends Component {
     const leafletMap = this.leafletMap.leafletElement;
 
     console.log("Inside component did mount.");
+
+    this.updateSlice();
 
     leafletMap.on('zoomend', () => {
       this.setState({zoom:leafletMap.getZoom()});
@@ -122,12 +124,14 @@ class App extends Component {
     this.setValueFromType(type, value.name);
   }
 
-  handleModalClose(event) {
-    this.setState({modal:false});
-  }
-
   handleNextPage(page) {
     this.setState({currentPage:page});
+  }
+
+  handleMenu() {
+    console.log("Handle Menu was clicked");
+    let value = !this.state.showData;
+    this.setState({showData:value});
   }
 
   getValueFromType(type) {
@@ -167,6 +171,8 @@ class App extends Component {
     });
     this.setState({filter:helper});
 
+    console.log(this.state.filter);
+
     if(changed){
       // Maybe this shouldn't happend every time the filter changes?
       // Now I only do it if the selection actualy changed.
@@ -194,40 +200,7 @@ class App extends Component {
                      onChange={(event)=>this.handleChange(type,event)}/>
            
   }
-  renderModal(book, render){
-    if(render){
-      return <div className={"modal is-active"}>
-             <div className="modal-background"></div>
-             <div className="modal-content">
-               <div className="card">
-                 <header className="card-header">
-                   <p className="card-header-title">
-                     {book.title}
-                   </p>
-                   <a className="card-header-icon" aria-label="more options">
-                     <span className="icon">
-                       <i className="fas fa-angle-down" aria-hidden="true"></i>
-                     </span>
-                   </a>
-                 </header>
-                 <div className="card-content">
-                   <div className="content">
-                     <p>{"Año: " + book.year}</p>
-                     <p>{"Género: " + book.genre}</p>
-                     <p>{"País: " + book.country}</p>
-                     <p>{"Ciudad: " + book.city}</p>
-                     <p>{"Idioma: " + book.language}</p>
-                   </div>
-                 </div>
-               </div>
-             </div>
-             <button className="modal-close is-large" aria-label="close" onClick={(e)=>this.handleModalClose(e)}></button>
-           </div>
-    }
-    else{
-      return null
-    }
-  }
+
 
   renderSelection(type) {
 
@@ -383,6 +356,9 @@ class App extends Component {
               value={this.state.value}
               onChange={value => this.handleSliderChange(value)} />
           </div>
+          <div className="App-hamburger" onClick={()=> this.handleMenu()}>
+             <span>*</span>
+          </div>
           <div className="App-selection mycontainer">
             {this.renderSelection("genre")}
             {this.renderSelection("language")}
@@ -390,7 +366,7 @@ class App extends Component {
             {this.renderSelection("city")}
           </div>
         </div>
-        <div className="App-data">
+        <div className={"App-data" + (this.state.showData?"":" hide-data")}>
           <Data data={this.state.slice} 
             handleDownload={this.handleDownload.bind(this)}
             handleNextPage={this.handleNextPage.bind(this)}

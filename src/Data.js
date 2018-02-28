@@ -4,8 +4,6 @@ import 'react-table/react-table.css'
 
 export default class Data extends React.Component {
     render() {
-        console.log(this.props.data);
-
         const columns = [{
                            Header: 'Title',
                            accessor: 'title'
@@ -28,6 +26,7 @@ export default class Data extends React.Component {
         return <ReactTable
                      data={this.props.data}
                      columns={columns}
+                     pageSizeOptions={[5, 10, 20]}
                    />
     }
 }
