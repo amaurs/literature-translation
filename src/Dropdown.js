@@ -1,17 +1,12 @@
 import React from 'react';
 import './Dropdown.css';
 
-
-
 class Dropdown extends React.Component {
-
-    doSomething() {
-        console.log();
-    }
-
     render() {
-        const items = this.props.options.map((option, index) => 
-                <Option key={index} value={option} />
+
+        let myArray = Object.keys(this.props.options).sort();
+        const items = myArray.map((option, index) => 
+                <Option key={index} value={option} size={this.props.options[option]}/>
             );
 
         let icon = "fa-";
@@ -39,9 +34,7 @@ class Dropdown extends React.Component {
 
         return <div className="field has-addons">
                 <div className="Dropdown-control control ">
-
                   <span className="icon Dropdown-icon"><i className={"fas " + icon}></i></span>
-        
                   <select className="select Dropdown-select is-four-fifths" value={this.props.selectedOption} 
                           onChange={(event)=>this.props.onChange(event)}>{items}
                   </select>
@@ -53,7 +46,7 @@ class Dropdown extends React.Component {
 
 function Option(props) {
     return (
-        <option>{props.value}</option>
+        <option value={props.value}>{props.value + " (" + props.size + ")"}</option>
     );
 }
 

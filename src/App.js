@@ -6,7 +6,7 @@ import Dropdown from './Dropdown';
 import Selection from './Selection';
 import InputRange from 'react-input-range';
 import { Map, TileLayer, Popup, GeoJSON, CircleMarker} from 'react-leaflet';
-import { yearMap, uniqueValues, sliceByFilter, download, getCountryId } from './util';
+import { mapValues, uniqueValues, sliceByFilter, download, getCountryId } from './util';
 import './App.css';
 import json2csv from 'json2csv';
 import assets from './assets.js';
@@ -30,7 +30,7 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    let yearsObj = yearMap(books);
+    let yearsObj = mapValues(books, "year");
     delete yearsObj[0];
     let years = Object.keys(yearsObj);
     console.log(years);
@@ -188,10 +188,10 @@ class App extends Component {
   }
 
   renderDropdown(type) {
-    return <Dropdown options={uniqueValues(this.state.slice, type)} 
-                         selectedOption={this.getValueFromType(type)} 
-                         type={type}
-                         onChange={(event)=>this.handleChange(type,event)}/>
+    return <Dropdown options={mapValues(this.state.slice, type)} 
+                     selectedOption={this.getValueFromType(type)} 
+                     type={type}
+                     onChange={(event)=>this.handleChange(type,event)}/>
            
   }
   renderModal(book, render){

@@ -7,21 +7,21 @@ function uniqueValues(array, column) {
     return Array.from(new Set(returnArray)).sort();
 }
 
-
-function yearMap(array) {
-    let years = {};
+function mapValues(array, column) {
+    let returnObject = {};
 
     array.forEach(function(element) {
-        let year = element["year"]
-        if(!(year in years)){
-            years[year] = 1;
+        let item = element[column]
+        if(!(item in returnObject)){
+            returnObject[item] = 1;
         }
         else{
-            years[year]++;
+            returnObject[item]++;
         }
     });
-    return years;
+    return returnObject;
 }
+
 
 /**
 There are two types of filters, the normal ones, and the year. We first
@@ -259,4 +259,4 @@ function getCountryId(name) {
 
 
 
-export { yearMap, uniqueValues, sliceByFilter, getCountryId, download };
+export { mapValues, uniqueValues, sliceByFilter, getCountryId, download };
