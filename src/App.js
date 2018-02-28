@@ -356,8 +356,10 @@ class App extends Component {
               value={this.state.value}
               onChange={value => this.handleSliderChange(value)} />
           </div>
-          <div className="App-hamburger" onClick={()=> this.handleMenu()}>
-             <span>*</span>
+          <div className={"App-burger" + (this.state.showData?"":" active")} onClick={()=> this.handleMenu()}>
+             <span className="line-1"></span>
+             <span className="line-2"></span>
+             <span className="line-3"></span>
           </div>
           <div className="App-selection mycontainer">
             {this.renderSelection("genre")}
@@ -366,7 +368,11 @@ class App extends Component {
             {this.renderSelection("city")}
           </div>
         </div>
-        <div className={"App-data" + (this.state.showData?"":" hide-data")}>
+        <div className={"App-data" + (this.state.showData?" hide-data":"")}>
+          <div className="App-buttons"> 
+            <button className="button is-danger"   
+                    onClick={()=>this.handleDownload()}>Descargar csv</button>
+          </div>
           <Data data={this.state.slice} 
             handleDownload={this.handleDownload.bind(this)}
             handleNextPage={this.handleNextPage.bind(this)}

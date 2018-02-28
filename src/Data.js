@@ -5,22 +5,22 @@ import 'react-table/react-table.css'
 export default class Data extends React.Component {
     render() {
         const columns = [{
-                           Header: 'Title',
+                           Header: 'Título',
                            accessor: 'title'
                          }, {
-                           Header: 'Year',
+                           Header: 'Año',
                            accessor: 'year'
                          }, {
-                           Header: 'Genre',
+                           Header: 'Género',
                            accessor: 'genre'
                          }, {
-                           Header: 'Country',
+                           Header: 'País',
                            accessor: 'country'
                          }, {
-                           Header: 'City',
+                           Header: 'Ciudad',
                            accessor: 'city'
                          }, {
-                           Header: 'Language',
+                           Header: 'Idioma',
                            accessor: 'language'
                          }]
         return <ReactTable

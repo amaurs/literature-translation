@@ -66,18 +66,52 @@
   z-index: 5;
 }
 
-.App-hamburger {
+.App-burger {
   position: absolute;
-  width: 50px;
-  height: 50px;
   top: 0;
   right: 0;
   z-index: 100;
-}
-.App-hamburger span{
-  font-size: 5em;
+  width: 2.5em;
+  height: 2.5em;
+  margin-right: 1em;
+  margin-top: 1em;
+  margin-bottom: 1em;
 }
 
+
+
+.App-burger span{
+  position: absolute;
+  transform-origin: center;
+  display: block;
+  left: 0;
+  top: 0;
+  right: 0;
+  width:100%;
+  height: 3px;
+  transition: transform .4s ease;
+  background-color: black;
+}
+
+.line-1 {
+    transform: translateY(-5px);
+}
+.line-2 {
+    transform: translateY(0px);
+}
+.line-3 {
+    transform: translateY(5px);
+}
+
+.active .line-1 {
+    transform: rotate(45deg) translateY(0px) translateZ(0);
+}
+.active .line-2 {
+    transform: rotate(45deg) translateY(0px) translateZ(0);
+}
+.active .line-3 {
+    transform: rotate(-45deg) translateY(0px) translateZ(0);
+}
 
 
 .App-slider {
@@ -99,9 +133,6 @@
 
 
 .App-buttons {
-  position: absolute;
-  bottom:0;
-  margin:20px;
 }
 
 .App-table {
@@ -138,6 +169,8 @@
 .selection-option button{
     float: right;
 }
+
+
 
 
 
