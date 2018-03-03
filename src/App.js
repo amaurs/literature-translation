@@ -52,6 +52,7 @@ class App extends Component {
                {key:"country", value:"Todos"}, 
                {key:"city", value:"Todos"}],
       slice: books,
+      searchKey: "",
       chartData: data,
       lat: 0.0,
       lng: 0.0,
@@ -59,7 +60,7 @@ class App extends Component {
       index: 0,
       isLoggedIn: false,
       pos: 0,
-      showData: false,
+      hideData: true,
       value:{ min: this.minYear, max: this.maxYear },
       currentPage:1,
     }
@@ -97,6 +98,10 @@ class App extends Component {
     this.setValueFromType(parent, "Todos");
   }
 
+  handleSearch(event) {
+    this.setState({searchKey:event.target.value});
+  }
+
   handleDownload(parent) {
     let fields = ["title","genre","country","city","year","language"];
     let csv = json2csv({ data: this.state.slice, fields: fields });
@@ -130,8 +135,8 @@ class App extends Component {
 
   handleMenu() {
     console.log("Handle Menu was clicked");
-    let value = !this.state.showData;
-    this.setState({showData:value});
+    let value = !this.state.hideData;
+    this.setState({hideData:value});
   }
 
   getValueFromType(type) {
@@ -356,7 +361,7 @@ class App extends Component {
               value={this.state.value}
               onChange={value => this.handleSliderChange(value)} />
           </div>
-          <div className={"App-burger" + (this.state.showData?"":" active")} onClick={()=> this.handleMenu()}>
+          <div className={"App-burger" + (this.state.hideData?"":" active")} onClick={()=> this.handleMenu()}>
              <span className="line-1"></span>
              <span className="line-2"></span>
              <span className="line-3"></span>
@@ -368,16 +373,22 @@ class App extends Component {
             {this.renderSelection("city")}
           </div>
         </div>
-        <div className={"App-data" + (this.state.showData?" hide-data":"")}>
+        <div className={"App-data" + (this.state.hideData?" hide-data":"")}>
           <div className="App-buttons"> 
             <button className="button is-danger"   
                     onClick={()=>this.handleDownload()}>Descargar csv</button>
           </div>
+          <div className="field">
+            <label className="label">Búsqueda</label>
+            <div className="control">
+              <input className="input" 
+                     type="text" 
+                     placeholder="Filtro" 
+                     onChange={(e)=>this.handleSearch(e)} />
+            </div>
+          </div>
           <Data data={this.state.slice} 
-            handleDownload={this.handleDownload.bind(this)}
-            handleNextPage={this.handleNextPage.bind(this)}
-            pageSize={pageSize}
-            currentPage={this.state.currentPage}/>
+                searchKey={this.state.searchKey.toLowerCase()} />
         </div>
         
         {easterEgg}

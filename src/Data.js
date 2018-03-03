@@ -22,9 +22,20 @@ export default class Data extends React.Component {
                          }, {
                            Header: 'Idioma',
                            accessor: 'language'
-                         }]
+                         }];
+        const searchKey = this.props.searchKey;
+
+        const filtered = this.props.data.filter(function(element){
+             
+             return element['title'].toLowerCase().includes(searchKey) ||
+                    element['year'].toLowerCase().includes(searchKey) ||
+                    element['genre'].toLowerCase().includes(searchKey) ||
+                    element['country'].toLowerCase().includes(searchKey) ||
+                    element['city'].toLowerCase().includes(searchKey) ||
+                    element['language'].toLowerCase().includes(searchKey);
+        });
         return <ReactTable
-                     data={this.props.data}
+                     data={filtered}
                      columns={columns}
                      pageSizeOptions={[5, 10, 20]}
                    />
