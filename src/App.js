@@ -60,6 +60,7 @@ class App extends Component {
       index: 0,
       isLoggedIn: false,
       pos: 0,
+      modal: false,
       hideData: true,
       value:{ min: this.minYear, max: this.maxYear },
       currentPage:1,
@@ -96,6 +97,12 @@ class App extends Component {
 
   handleClick(parent) {
     this.setValueFromType(parent, "Todos");
+  }
+
+  handleModal(){
+    let modal = !this.state.modal;
+    console.log("Show modal: " + modal);
+    this.setState({modal:modal});
   }
 
   handleSearch(event) {
@@ -361,10 +368,11 @@ class App extends Component {
               value={this.state.value}
               onChange={value => this.handleSliderChange(value)} />
           </div>
-          <div className={"App-burger" + (this.state.hideData?"":" active")} onClick={()=> this.handleMenu()}>
-             <span className="line-1"></span>
-             <span className="line-2"></span>
-             <span className="line-3"></span>
+          <div className="App-burger">
+            <button className="button is-danger"   
+                    onClick={()=>this.handleMenu()}>Información</button>
+            <button className="button is-danger"   
+                    onClick={()=>this.handleModal()}>Acerca de</button>
           </div>
           <div className="App-selection mycontainer">
             {this.renderSelection("genre")}
@@ -390,7 +398,19 @@ class App extends Component {
           <Data data={this.state.slice} 
                 searchKey={this.state.searchKey.toLowerCase()} />
         </div>
-        
+        <div className={"modal" + (this.state.modal?" is-active":"")}>
+          <div className="modal-background"></div>
+          <div className="modal-card">
+            <header className="modal-card-head">
+              <p className="modal-card-title">Modal title</p>
+              <button className="delete" aria-label="close" onClick={()=>this.handleModal()}></button>
+            </header>
+            <section className="modal-card-body">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eleifend tristique turpis, ut congue ipsum elementum eget. Nam luctus, tortor ac mollis rhoncus, turpis dolor porta quam, ut hendrerit leo erat eget dui. Donec quis ex venenatis, dapibus nibh id, tincidunt urna. Ut posuere lacinia eleifend. Sed vel enim at eros suscipit blandit. Quisque consectetur purus at tortor suscipit, ac feugiat erat fringilla. Nam massa sem, placerat in gravida ac, condimentum at arcu. Phasellus non iaculis arcu. Maecenas vulputate et magna sed auctor. Duis eu nisl et nunc ullamcorper consectetur. Nam condimentum eros eu vestibulum vestibulum. Nullam a tempus velit, sed lacinia leo. Nunc lectus elit, pharetra id sem sed, hendrerit lacinia mi. Fusce tincidunt quam non nisi tempus imperdiet. Donec tincidunt velit et sapien placerat, sit amet convallis diam condimentum. Pellentesque maximus vehicula diam sit amet fringilla.
+              Donec malesuada, ipsum sit amet viverra efficitur, nunc felis scelerisque neque, eu euismod sem nisi vel velit. Curabitur blandit posuere ipsum in finibus. Morbi mauris ligula, finibus ac scelerisque nec, tristique at libero. Aliquam bibendum dolor odio, ac rutrum quam vehicula ac. Proin feugiat non nisl eget elementum. Nulla ex elit, commodo vitae hendrerit a, lacinia in nibh. Donec molestie ex non sagittis tristique. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Cras tristique tristique finibus. Maecenas elementum pharetra turpis, et efficitur justo interdum et. Maecenas tristique vulputate pharetra. Sed eleifend sapien quis diam ornare convallis. Mauris quis vulputate magna. Cras molestie lorem nisi, vel euismod nunc rutrum luctus. Mauris non pretium erat, non gravida mauris.
+            </section>
+          </div>
+        </div>
         {easterEgg}
       </div>
     );
