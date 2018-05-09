@@ -14,7 +14,7 @@ import Chart from './Chart'
 import 'react-input-range/lib/css/index.css';
 
 const zoom_threshold = 5;
-const pageSize = 10;
+const API = "http://45.33.126.223:3000"
 
 function EasterEgg(props){
     let easterStyle = {
@@ -64,21 +64,55 @@ class App extends Component {
       hideData: true,
       value:{ min: this.minYear, max: this.maxYear },
       currentPage:1,
+      isLoading:true,
     }
   }
 
   componentDidMount() {
-    const leafletMap = this.leafletMap.leafletElement;
+    
 
-    console.log("Inside component did mount.");
+    fetch(API)
+      .then(response => response.json())
+      .then(data => {
+                //console.log(uniqueValues(this.state.slice, "city"));
+                this.updateSlice();
+                this.updateDimensions();
+                window.addEventListener("resize", this.updateDimensions.bind(this));
 
-    this.updateSlice();
 
-    leafletMap.on('zoomend', () => {
-      this.setState({zoom:leafletMap.getZoom()});
-    });
-    this.updateDimensions();
-    window.addEventListener("resize", this.updateDimensions.bind(this));
+                let newData = data.map(element => {
+                    let row = {};
+                    row.title = element.VC_TITULO;
+                    row.year = element.ANIO_PRIMER_EDI;
+                    row.genre = element.SECCION2;
+                    row.author = element.VC_TITULOS_AUTORES;
+                    row.language = element.ES_TRADUCCION;
+                    let info = element.DATOS_GRALE_EDI.split("|");
+                    
+                    if (info[1]) {
+                      let location = info[1].split(",");
+                      row.city = location[0];
+                      if (location.length > 1){
+                        row.country = location[1]; 
+                      } else {
+                        row.country = "X";
+                      }
+                    } else {
+                      row.city = "X";
+                      row.country = "X";
+                    }
+                    return row;
+                });
+
+                console.log(newData);
+
+
+                this.setState({isLoading:false})
+                const leafletMap = this.leafletMap.leafletElement;
+                leafletMap.on('zoomend', () => {
+                  this.setState({zoom:leafletMap.getZoom()});
+                });
+        });
   }
 
   updateDimensions(){
@@ -330,12 +364,19 @@ class App extends Component {
 
   render() {
     const position = [this.state.lat, this.state.lng];
-    const isLoggedIn = this.state.isLoggedIn;
+    const {isLoggedIn, isLoading} = this.state;
     let easterEgg = null;
+    
+    if (isLoading) {
+      return <p>Descargando la información desde el servidor...</p>
+    }
+
     if (isLoggedIn) {
       let pos = this.state.pos;
       easterEgg =  <EasterEgg image={"easterImage"} pos={pos}/>
     }
+
+
 
     return (
       <div tabIndex="0" onKeyDown={(d) => this.renderEasterEgg(d)}>
