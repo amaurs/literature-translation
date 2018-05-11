@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import books from './data/dataset.json';
 import countries from './data/countries.geo.json';
 import Data from './Data';
 import Dropdown from './Dropdown';
@@ -30,39 +29,26 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    let yearsObj = mapValuesYear(books, "year");
-    delete yearsObj[0];
-    let years = Object.keys(yearsObj);
-    console.log(years);
-    let data = [];
-    
-
-
-    this.minYear = Math.min.apply(Math, years);
-    this.maxYear = Math.max.apply(Math, years);
-
-
-    for(let year = this.minYear; year < this.maxYear + 1; year++) {
-        data.push({name:year, value:(yearsObj[year]?yearsObj[year]:0)});
-    }
-
     this.state = {
       filter: [{key:"genre", value:"Todos"}, 
                {key:"language", value:"Todos"}, 
                {key:"country", value:"Todos"}, 
                {key:"city", value:"Todos"}],
-      slice: books,
+      slice: null,
+      books: null,
       searchKey: "",
-      chartData: data,
+      chartData: null,
       lat: 0.0,
       lng: 0.0,
       zoom: 3,
       index: 0,
+      minYear:0,
+      maxYear:2000,
       isLoggedIn: false,
       pos: 0,
       modal: false,
       hideData: true,
-      value:{ min: this.minYear, max: this.maxYear },
+      value:{ min: 0, max: 2000 },
       currentPage:1,
       isLoading:true,
     }
@@ -75,39 +61,54 @@ class App extends Component {
       .then(response => response.json())
       .then(data => {
                 //console.log(uniqueValues(this.state.slice, "city"));
-                this.updateSlice();
+                
                 this.updateDimensions();
                 window.addEventListener("resize", this.updateDimensions.bind(this));
 
+                let newCities = [];
 
                 let newData = data.map(element => {
-                    let row = {};
-                    row.title = element.VC_TITULO;
-                    row.year = element.ANIO_PRIMER_EDI;
-                    row.genre = element.SECCION2;
-                    row.author = element.VC_TITULOS_AUTORES;
-                    row.language = element.ES_TRADUCCION;
-                    let info = element.DATOS_GRALE_EDI.split("|");
-                    
-                    if (info[1]) {
-                      let location = info[1].split(",");
-                      row.city = location[0];
-                      if (location.length > 1){
-                        row.country = location[1]; 
-                      } else {
-                        row.country = "X";
-                      }
-                    } else {
-                      row.city = "X";
-                      row.country = "X";
-                    }
-                    return row;
+                  let row = {};
+                  row.author = element.AUTOR;
+                  row.title = element.TITULO;
+                  row.publisher = element.EDITORIAL;
+                  row.year = element.ANIO;
+                  row.city = element.CIUDAD;
+                  row.genre = element.GENERO;
+                  row.lat_country = element.CIUDAD_LATITUD;
+                  row.lng_country = element.CIUDAD_LONGITUD;
+                  row.country = element.PAIS;
+                  row.lat = element.PAIS_LATITUD;
+                  row.lng = element.PAIS_LONGITUD;
+                  return row;
                 });
-
+                
                 console.log(newData);
+                
 
 
-                this.setState({isLoading:false})
+                let yearsObj = mapValuesYear(newData, "year");
+                delete yearsObj[0];
+                let years = Object.keys(yearsObj);
+                console.log(years);
+                let chartData = [];
+                let minYear = Math.min.apply(Math, years);
+                let maxYear = Math.max.apply(Math, years);
+
+                this.setState({isLoading:false, 
+                               books:newData, 
+                               chartData:chartData, 
+                               maxYear:maxYear, 
+                               minYear:minYear, 
+                               value:{ min: minYear, max: maxYear }});
+
+                for(let year = minYear; year < maxYear + 1; year++) {
+                    data.push({name:year, value:(yearsObj[year]?yearsObj[year]:0)});
+                }
+
+
+                this.updateSlice();
+
                 const leafletMap = this.leafletMap.leafletElement;
                 leafletMap.on('zoomend', () => {
                   this.setState({zoom:leafletMap.getZoom()});
@@ -217,8 +218,6 @@ class App extends Component {
     });
     this.setState({filter:helper});
 
-    console.log(this.state.filter);
-
     if(changed){
       // Maybe this shouldn't happend every time the filter changes?
       // Now I only do it if the selection actualy changed.
@@ -227,7 +226,9 @@ class App extends Component {
   }
 
   updateSlice() {
+    let books = this.state.books;
     let newSlice = sliceByFilter(books, this.state.filter, this.state.value);
+    console.log(newSlice);
     this.setState({slice:newSlice, currentPage:1});
   }
 
@@ -240,6 +241,7 @@ class App extends Component {
   }
 
   renderDropdown(type) {
+
     return <Dropdown options={mapValues(this.state.slice, type)} 
                      selectedOption={this.getValueFromType(type)} 
                      type={type}
@@ -364,10 +366,10 @@ class App extends Component {
 
   render() {
     const position = [this.state.lat, this.state.lng];
-    const {isLoggedIn, isLoading} = this.state;
+    const {isLoggedIn, isLoading, slice} = this.state;
     let easterEgg = null;
     
-    if (isLoading) {
+    if (isLoading || slice == null) {
       return <p>Descargando la información desde el servidor...</p>
     }
 
@@ -404,8 +406,8 @@ class App extends Component {
             <Chart data={this.state.chartData}
                 value={this.state.value}/>
             <InputRange
-              minValue={this.minYear}
-              maxValue={this.maxYear}
+              minValue={this.state.minYear}
+              maxValue={this.state.maxYear}
               value={this.state.value}
               onChange={value => this.handleSliderChange(value)} />
           </div>

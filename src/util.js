@@ -9,7 +9,7 @@ function uniqueValues(array, column) {
 
 function mapValues(array, column) {
     let returnObject = {"Todos":0};
-
+    //debugger;
     array.forEach(function(element) {
         let item = element[column]
         returnObject["Todos"]++;
@@ -25,6 +25,7 @@ function mapValues(array, column) {
 
 function mapValuesYear(array, column) {
     let returnObject = {};
+
 
     array.forEach(function(element) {
         let item = element[column]
@@ -273,7 +274,6 @@ function getCountryId(name) {
                     "Zimbabwe":"ZWE"};
     return nameMap[name];
 }
-
 
 
 export { mapValuesYear, mapValues, uniqueValues, sliceByFilter, getCountryId, download };
