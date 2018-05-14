@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import countries from './data/countries.geo.json';
 import Data from './Data';
 import Dropdown from './Dropdown';
 import CitiesLayer from './CitiesLayer';
 import Selection from './Selection';
 import InputRange from 'react-input-range';
 import { Map, TileLayer } from 'react-leaflet';
-import { mapValuesYear, mapValues, uniqueValues, sliceByFilter, download, getCountryId } from './util';
+import { mapValuesYear, mapValues, sliceByFilter, download } from './util';
 import './App.css';
 import json2csv from 'json2csv';
 import assets from './assets.js';
@@ -178,25 +177,9 @@ class App extends Component {
   }
 
   getValueFromType(type) {
-    let value = "Todos";
-    this.state.filter.forEach(function(option){
-      if(option.key === type) {
-        value = option.value;
-      }
-    });
-    return value;
-  }
-
-  filterCountries() {
-    let tokens = uniqueValues(this.state.slice, "country").map(country => getCountryId(country));
-    let copy = JSON.parse(JSON.stringify(countries))
-    copy.features = [];
-    for(let i = 0; i < countries.features.length; i++) {
-      if(tokens.indexOf(countries.features[i].id) > -1) {
-        copy.features.push(JSON.parse(JSON.stringify(countries.features[i])));
-      }
-    }
-    return copy;
+    return this.state.filter.filter(option => option.key === type)
+                            .map(option => option.value)
+                            .reduce(value => value);
   }
 
   /**
