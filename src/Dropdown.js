@@ -1,9 +1,8 @@
 import React from 'react';
 import './Dropdown.css';
 
-class Dropdown extends React.Component {
+export default class Dropdown extends React.Component {
     render() {
-
         let myArray = Object.keys(this.props.options).sort();
         const items = myArray.map((option, index) => 
                 <Option key={index} value={option} size={this.props.options[option]}/>
@@ -38,7 +37,6 @@ class Dropdown extends React.Component {
                   <select className="select Dropdown-select is-four-fifths" value={this.props.selectedOption} 
                           onChange={(event)=>this.props.onChange(event)}>{items}
                   </select>
-                  
                 </div>
                </div>
     }
@@ -49,5 +47,3 @@ function Option(props) {
         <option value={props.value}>{props.value + " ("+ props.size +")"}</option>
     );
 }
-
-export default Dropdown;

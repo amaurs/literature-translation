@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import countries from './data/countries.geo.json';
 import Data from './Data';
 import Dropdown from './Dropdown';
+import CitiesLayer from './CitiesLayer';
 import Selection from './Selection';
 import InputRange from 'react-input-range';
-import { Map, TileLayer, Popup, GeoJSON, CircleMarker} from 'react-leaflet';
+import { Map, TileLayer } from 'react-leaflet';
 import { mapValuesYear, mapValues, uniqueValues, sliceByFilter, download, getCountryId } from './util';
 import './App.css';
 import json2csv from 'json2csv';
@@ -52,68 +53,60 @@ class App extends Component {
       currentPage:1,
       isLoading:true,
     }
+    this.handleMarkerClick = this.handleMarkerClick.bind(this);
+     
   }
 
   componentDidMount() {
-    
-
     fetch(API)
       .then(response => response.json())
       .then(data => {
-                //console.log(uniqueValues(this.state.slice, "city"));
-                
-                this.updateDimensions();
-                window.addEventListener("resize", this.updateDimensions.bind(this));
-
-                let newCities = [];
-
-                let newData = data.map(element => {
-                  let row = {};
-                  row.author = element.AUTOR;
-                  row.title = element.TITULO;
-                  row.publisher = element.EDITORIAL;
-                  row.year = element.ANIO;
-                  row.city = element.CIUDAD;
-                  row.genre = element.GENERO;
-                  row.lat_country = element.CIUDAD_LATITUD;
-                  row.lng_country = element.CIUDAD_LONGITUD;
-                  row.country = element.PAIS;
-                  row.lat = element.PAIS_LATITUD;
-                  row.lng = element.PAIS_LONGITUD;
-                  return row;
-                });
-                
-                console.log(newData);
-                
-
-
-                let yearsObj = mapValuesYear(newData, "year");
-                delete yearsObj[0];
-                let years = Object.keys(yearsObj);
-                console.log(years);
-                let chartData = [];
-                let minYear = Math.min.apply(Math, years);
-                let maxYear = Math.max.apply(Math, years);
-
-                this.setState({isLoading:false, 
-                               books:newData, 
-                               chartData:chartData, 
-                               maxYear:maxYear, 
-                               minYear:minYear, 
-                               value:{ min: minYear, max: maxYear }});
-
-                for(let year = minYear; year < maxYear + 1; year++) {
-                    data.push({name:year, value:(yearsObj[year]?yearsObj[year]:0)});
-                }
-
-
-                this.updateSlice();
-
-                const leafletMap = this.leafletMap.leafletElement;
-                leafletMap.on('zoomend', () => {
-                  this.setState({zoom:leafletMap.getZoom()});
-                });
+        this.updateDimensions();
+        window.addEventListener("resize", this.updateDimensions.bind(this));
+        let newData = data.map(element => {
+          let row = {};
+          row.author = element.AUTOR == null?"X":element.AUTOR;
+          row.language = element.LENGUA == null?"X":element.LENGUA;
+          row.title = element.TITULO == null?"X":element.TITULO;
+          row.publisher = element.EDITORIAL == null?"X":element.EDITORIAL;
+          row.year = element.ANIO == null?"X":element.ANIO;
+          row.city = element.CIUDAD == null?"X":element.CIUDAD;
+          row.genre = element.GENERO == null?"X":element.GENERO;
+          row.lat = element.CIUDAD_LATITUD == null?0:element.CIUDAD_LATITUD;
+          row.lng = element.CIUDAD_LONGITUD == null?0:element.CIUDAD_LONGITUD;
+          row.country = element.PAIS == null?"X":element.PAIS;
+          row.lat_country = element.PAIS_LATITUD == null?0:element.PAIS_LATITUD;
+          row.lng_country = element.PAIS_LONGITUD == null?0:element.PAIS_LONGITUD;
+          return row;
         });
+
+        let yearsObj = mapValuesYear(newData, "year");
+        delete yearsObj[0];
+        let years = Object.keys(yearsObj);
+        let chartData = [];
+        let minYear = Math.min.apply(Math, years);
+        let maxYear = Math.max.apply(Math, years);
+
+        for(let year = minYear; year < maxYear + 1; year++) {
+          chartData.push({name:year, value:(yearsObj[year]?yearsObj[year]:0)});
+        }
+
+
+        this.setState({isLoading:false, 
+                       books:newData, 
+                       chartData:chartData, 
+                       maxYear:maxYear, 
+                       minYear:minYear, 
+                       value:{ min: minYear, max: maxYear }});
+
+        
+        this.updateSlice();
+
+        const leafletMap = this.leafletMap.leafletElement;
+        leafletMap.on('zoomend', () => {
+          this.setState({zoom:leafletMap.getZoom()});
+        });
+      });
   }
 
   updateDimensions(){
@@ -158,7 +151,6 @@ class App extends Component {
 
   handleSliderChange(value) {
     this.setState({value:value});
-    console.log(this.state.value);
     this.updateSlice();
   }
 
@@ -181,6 +173,10 @@ class App extends Component {
     this.setState({hideData:value});
   }
 
+  handleChangeZoom(zoom) {
+    this.setState({zoom:zoom});
+  }
+
   getValueFromType(type) {
     let value = "Todos";
     this.state.filter.forEach(function(option){
@@ -197,7 +193,7 @@ class App extends Component {
     copy.features = [];
     for(let i = 0; i < countries.features.length; i++) {
       if(tokens.indexOf(countries.features[i].id) > -1) {
-            copy.features.push(JSON.parse(JSON.stringify(countries.features[i])));
+        copy.features.push(JSON.parse(JSON.stringify(countries.features[i])));
       }
     }
     return copy;
@@ -217,7 +213,6 @@ class App extends Component {
       }
     });
     this.setState({filter:helper});
-
     if(changed){
       // Maybe this shouldn't happend every time the filter changes?
       // Now I only do it if the selection actualy changed.
@@ -228,16 +223,7 @@ class App extends Component {
   updateSlice() {
     let books = this.state.books;
     let newSlice = sliceByFilter(books, this.state.filter, this.state.value);
-    console.log(newSlice);
     this.setState({slice:newSlice, currentPage:1});
-  }
-
-  renderGeoJsonLayers() {
-    let layers = [];
-    this.filterCountries().features.forEach(feature => {
-        layers.push(<GeoJSON key={ feature.id } data={ feature } style={this.getStyle}/>);
-    });
-    return layers;
   }
 
   renderDropdown(type) {
@@ -249,74 +235,10 @@ class App extends Component {
            
   }
 
-
   renderSelection(type) {
 
     return <Selection value={this.getValueFromType(type)} 
                       onClick={()=>this.handleClick(type)}/>
-  }
-
-  renderCities() {
-    let markers = [];
-    let zoomLevel = this.state.zoom;
-    let type = null;
-    if(zoomLevel < zoom_threshold) {
-      //console.log("Display by country.");
-      type = "country";
-      let countries = {};
-      this.state.slice.forEach((feature, index) => {
-        if(countries.hasOwnProperty(feature.country)) {
-          let aux = { 
-                 name: feature.country,
-                 position: [feature.lat_country, feature.lng_country], 
-                 count: countries[feature.country].count + 1};
-          countries[feature.country] = aux;
-        }
-        else {
-          let aux = { 
-                 name: feature.country,
-                 position: [feature.lat_country, feature.lng_country], 
-                 count: 1};
-          countries[feature.country] = aux;
-        }
-      });
-      markers = countries;
-    }
-    else {
-      let cities = {};
-      type = "city";
-      this.state.slice.forEach((feature, index) => {
-        if(cities.hasOwnProperty(feature.city)) {
-          let aux = {
-                 name: feature.city,
-                 position: [feature.lat, feature.lng], 
-                 count: cities[feature.city].count + 1};
-          cities[feature.city] = aux;
-        }
-        else {
-          let aux = {
-                 name: feature.city,
-                 position: [feature.lat, feature.lng], 
-                 count: 1};
-          cities[feature.city] = aux;
-        }
-      });
-      markers = cities;
-    }
-
-    let keys = Object.keys(markers);
-    let values = keys.map(function(v) { return markers[v]; });
-
-    return values.map((value, index) => 
-      <CircleMarker key={ index } 
-                    center={ value.position } 
-                    radius={ Math.log(value.count) * 3 + 3 }
-                    onClick={(e) => this.handleMarkerClick(type, value)} >
-        <Popup>
-          <span>{value.name} <br/> {value.count}</span>
-        </Popup>
-      </CircleMarker>
-    );
   }
 
   getStyle(feature, layer) {
@@ -331,10 +253,8 @@ class App extends Component {
     let pos = this.state.pos;
     let container = document.body;
     let width = container.offsetWidth;
-
     pos = pos + 3;
     this.setState({pos:pos});
-
     if(pos > width) {
       clearInterval(this.timerID);
       this.setState({isLoggedIn: false});
@@ -378,23 +298,26 @@ class App extends Component {
       easterEgg =  <EasterEgg image={"easterImage"} pos={pos}/>
     }
 
-
-
     return (
       <div tabIndex="0" onKeyDown={(d) => this.renderEasterEgg(d)}>
         <div className="App-map-and-controls">
-          <Map className="App-map" 
-               ref={map => { this.leafletMap = map; }} 
-               center={position} 
-               zoom={this.state.zoom} 
-               maxZoom={15} 
-               minZoom={3} 
-               onZoom={(e)=>this.handleOnZoomLevelsChange(e)}>
-              <TileLayer
-                      attribution='Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
-                      url='https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}'
-                    />
-                  {this.renderCities()}
+          <Map 
+            className="App-map" 
+            ref={map => { this.leafletMap = map; }} 
+            center={position} 
+            zoom={this.state.zoom} 
+            maxZoom={15} 
+            minZoom={3} 
+            onZoom={(e)=>this.handleOnZoomLevelsChange(e)}>
+            <TileLayer
+              attribution='Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
+              url='https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}' />
+            <CitiesLayer 
+              zoom={this.state.zoom}
+              slice={this.state.slice}
+              handleMarkerClick={this.handleMarkerClick}
+              zoom_threshold={zoom_threshold}
+              handleChangeZoom={this.handleChangeZoom} />
           </Map>
           <div className="App-dropdown mycontainer vertical">
             {this.renderDropdown("genre")}
@@ -403,8 +326,9 @@ class App extends Component {
             {this.renderDropdown("city")}
           </div>
           <div className="App-slider mycontainer">
-            <Chart data={this.state.chartData}
-                value={this.state.value}/>
+            <Chart 
+              data={this.state.chartData}
+              value={this.state.value}/>
             <InputRange
               minValue={this.state.minYear}
               maxValue={this.state.maxYear}
@@ -426,8 +350,9 @@ class App extends Component {
         </div>
         <div className={"App-data" + (this.state.hideData?" hide-data":"")}>
           <div className="App-buttons"> 
-            <button className="button is-danger"   
-                    onClick={()=>this.handleDownload()}>Descargar csv</button>
+            <button 
+              className="button is-danger"   
+              onClick={()=>this.handleDownload()}>Descargar csv</button>
           </div>
           <div className="field">
             <label className="label">Búsqueda</label>
@@ -438,8 +363,9 @@ class App extends Component {
                      onChange={(e)=>this.handleSearch(e)} />
             </div>
           </div>
-          <Data data={this.state.slice} 
-                searchKey={this.state.searchKey.toLowerCase()} />
+          <Data 
+            data={this.state.slice} 
+            searchKey={this.state.searchKey.toLowerCase()} />
         </div>
         <div className={"modal" + (this.state.modal?" is-active":"")}>
           <div className="modal-background"></div>

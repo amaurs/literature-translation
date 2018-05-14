@@ -26,9 +26,8 @@ export default class Data extends React.Component {
         const searchKey = this.props.searchKey;
 
         const filtered = this.props.data.filter(function(element){
-             
              return element['title'].toLowerCase().includes(searchKey) ||
-                    element['year'].toLowerCase().includes(searchKey) ||
+                    element['year'].toString().toLowerCase().includes(searchKey) ||
                     element['genre'].toLowerCase().includes(searchKey) ||
                     element['country'].toLowerCase().includes(searchKey) ||
                     element['city'].toLowerCase().includes(searchKey) ||
