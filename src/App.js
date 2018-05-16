@@ -12,6 +12,8 @@ import assets from './assets.js';
 import Chart from './Chart'
 import 'react-input-range/lib/css/index.css';
 import _ from 'lodash';
+import { BounceLoader } from 'react-spinners';
+
 
 const zoom_threshold = 5;
 const API = "http://45.33.126.223:3000"
@@ -274,7 +276,9 @@ class App extends Component {
     let easterEgg = null;
     
     if (isLoading || slice == null) {
-      return <p>Descargando la información desde el servidor...</p>
+      return <div className='App-spinner'>
+               <BounceLoader color='#3388ff' />
+             </div>
     }
 
     if (isLoggedIn) {
