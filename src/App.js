@@ -11,6 +11,7 @@ import json2csv from 'json2csv';
 import assets from './assets.js';
 import Chart from './Chart'
 import 'react-input-range/lib/css/index.css';
+import _ from 'lodash';
 
 const zoom_threshold = 5;
 const API = "http://45.33.126.223:3000"
@@ -53,7 +54,7 @@ class App extends Component {
       isLoading:true,
     }
     this.handleMarkerClick = this.handleMarkerClick.bind(this);
-     
+    this.updateSliceDebounced = _.debounce(this.updateSlice,250);
   }
 
   componentDidMount() {
@@ -106,15 +107,6 @@ class App extends Component {
       });
   }
 
-  benchmark(callback) {
-    let t0 = performance.now();
-    for(let i = 0; i < 1; i++){
-      callback(this.state.books, this.state.selection, this.state.value);
-    }
-    let t1 = performance.now();
-    console.log("Call took " + (t1 - t0)/1 + " milliseconds.")
-  }
-
   updateDimensions(){
     let update_width  = window.innerWidth;
     let update_height = window.innerHeight;
@@ -157,7 +149,7 @@ class App extends Component {
 
   handleSliderChange(value) {
     this.setState({value:value});
-    this.updateSlice();
+    this.updateSliceDebounced();
   }
 
   handleMarkerClick(type, value) {
@@ -207,11 +199,12 @@ class App extends Component {
     if(changed){
       // Maybe this shouldn't happend every time the selection changes?
       // Now I only do it if the selection actualy changed.
-      this.updateSlice();
+      this.updateSliceDebounced();
     }
   }
 
   updateSlice() {
+    console.log("Updating slice");
     let books = this.state.books;
     let newSlice = sliceBySelection(books, this.state.selection, this.state.value);
     this.setState({slice:newSlice, currentPage:1});

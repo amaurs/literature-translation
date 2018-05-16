@@ -1,5 +1,5 @@
 import React from 'react';
-import { CircleMarker, Popup} from 'react-leaflet';
+import { CircleMarker, Popup, Tooltip } from 'react-leaflet';
 
 export default class CitiesLayer extends React.Component {
     render() {
@@ -41,6 +41,9 @@ export default class CitiesLayer extends React.Component {
               <Popup>
                 <span>{value.name} <br/> {value.count}</span>
               </Popup>
+              <Tooltip direction='right' offset={[-8, -2]} opacity={1} >
+                <span>{value.name}</span>
+              </Tooltip>
             </CircleMarker>
         );
     }
