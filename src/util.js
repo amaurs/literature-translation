@@ -26,8 +26,6 @@ function mapValues(array, column) {
 
 function mapValuesYear(array, column) {
     let returnObject = {};
-
-
     array.forEach(function(element) {
         let item = element[column]
         if(!(item in returnObject)){
@@ -47,17 +45,15 @@ There are two types of filters, the normal ones, and the year. We first
 see if the current book is in between the given years, and then we check
 if the other filters are met.
 **/
-function sliceByFilter(array, filters, yearFilter) {
+function sliceBySelection(array, filters, yearFilter) {
   let result = [];
   array.forEach(function(element){
     let add = true;
     if(parseInt(element["year"], 10) < parseInt(yearFilter.max, 10) && 
        parseInt(element["year"], 10) > parseInt(yearFilter.min, 10)){
       filters.forEach(function(filter){
-        if(filter.value !== "Todos") {
-          if(element[filter.key] !== filter.value){
+        if(filter.value !== "Todos" && element[filter.key] !== filter.value){
             add &= false;
-          }
         }
       });
       if(add){
@@ -66,6 +62,14 @@ function sliceByFilter(array, filters, yearFilter) {
     }
   });
   return result;
+}
+
+function sliceBySelectionFunctional(array, filters, yearFilter) {
+    return array.filter(element => parseInt(element["year"], 10) < parseInt(yearFilter.max, 10) && 
+               parseInt(element["year"], 10) > parseInt(yearFilter.min, 10) && 
+               filters.filter(filter => filter.value === "Todos" || element[filter.key] === filter.value)
+                      .map(filter => true)
+                      .reduce((total, other) => total && other));
 }
 
 function download(data, filename, mime) {
@@ -86,4 +90,4 @@ function download(data, filename, mime) {
   window.URL.revokeObjectURL(blobURL);
 }
 
-export { mapValuesYear, mapValues, sliceByFilter, download };
+export { mapValuesYear, mapValues, sliceBySelection, sliceBySelectionFunctional, download };

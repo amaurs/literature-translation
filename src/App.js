@@ -5,7 +5,7 @@ import CitiesLayer from './CitiesLayer';
 import Selection from './Selection';
 import InputRange from 'react-input-range';
 import { Map, TileLayer } from 'react-leaflet';
-import { mapValuesYear, mapValues, sliceByFilter, download } from './util';
+import { mapValuesYear, mapValues, sliceBySelection, sliceBySelectionFunctional, download } from './util';
 import './App.css';
 import json2csv from 'json2csv';
 import assets from './assets.js';
@@ -30,7 +30,7 @@ class App extends Component {
     super(props);
 
     this.state = {
-      filter: [{key:"genre", value:"Todos"}, 
+      selection: [{key:"genre", value:"Todos"}, 
                {key:"language", value:"Todos"}, 
                {key:"country", value:"Todos"}, 
                {key:"city", value:"Todos"}],
@@ -98,14 +98,21 @@ class App extends Component {
                        minYear:minYear, 
                        value:{ min: minYear, max: maxYear }});
 
-        
         this.updateSlice();
-
         const leafletMap = this.leafletMap.leafletElement;
         leafletMap.on('zoomend', () => {
           this.setState({zoom:leafletMap.getZoom()});
         });
       });
+  }
+
+  benchmark(callback) {
+    let t0 = performance.now();
+    for(let i = 0; i < 1; i++){
+      callback(this.state.books, this.state.selection, this.state.value);
+    }
+    let t1 = performance.now();
+    console.log("Call took " + (t1 - t0)/1 + " milliseconds.")
   }
 
   updateDimensions(){
@@ -177,17 +184,17 @@ class App extends Component {
   }
 
   getValueFromType(type) {
-    return this.state.filter.filter(option => option.key === type)
-                            .map(option => option.value)
-                            .reduce(value => value);
+    return this.state.selection.filter(option => option.key === type)
+                               .map(option    => option.value)
+                               .reduce(value  => value);
   }
 
   /**
-  The filter object is copied and the value that is accessed is updated,
-  the slice with the filter in the information is updated as well.
+  The selection object is copied and the value that is accessed is updated,
+  the slice with the selection in the information is updated as well.
   **/
   setValueFromType(type, value) {
-    let helper = this.state.filter.slice();
+    let helper = this.state.selection.slice();
     let changed = false;
     helper.forEach(function(option){
       if(option.key === type) {
@@ -195,9 +202,10 @@ class App extends Component {
         changed =  true;
       }
     });
-    this.setState({filter:helper});
+
+    this.setState({selection:helper});
     if(changed){
-      // Maybe this shouldn't happend every time the filter changes?
+      // Maybe this shouldn't happend every time the selection changes?
       // Now I only do it if the selection actualy changed.
       this.updateSlice();
     }
@@ -205,7 +213,7 @@ class App extends Component {
 
   updateSlice() {
     let books = this.state.books;
-    let newSlice = sliceByFilter(books, this.state.filter, this.state.value);
+    let newSlice = sliceBySelection(books, this.state.selection, this.state.value);
     this.setState({slice:newSlice, currentPage:1});
   }
 
