@@ -68,7 +68,7 @@ class App extends Component {
         let newData = data.map(element => {
           let row = {};
           row.author = element.AUTOR == null?"X":element.AUTOR;
-          row.language = element.Lengua == null?"X":element.Lengua;
+          row.language = element.LENGUA == null?"X":element.LENGUA;
           row.title = element.TITULO == null?"X":element.TITULO;
           row.publisher = element.EDITORIAL == null?"X":element.EDITORIAL;
           row.year = element.ANIO == null?"X":element.ANIO;
@@ -314,12 +314,14 @@ class App extends Component {
             {this.renderDropdown("city")}
           </div>
           <div className="App-slider mycontainer">
+            <p className="App-slider-range">{this.state.value.min + "-" + this.state.value.max}</p>
             <Chart 
               data={this.state.chartData}
               value={this.state.value}/>
             <InputRange
               minValue={this.state.minYear}
               maxValue={this.state.maxYear}
+              formatLabel={value => ""}
               value={this.state.value}
               onChange={value => this.handleSliderChange(value)} />
           </div>

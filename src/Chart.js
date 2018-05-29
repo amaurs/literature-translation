@@ -8,6 +8,7 @@ export default class Chart extends Component {
     let dims = this.svg.getBoundingClientRect();
     this.width = dims.width;
     this.height = dims.height;
+    let tooltip = d3.select("body").append("div").attr("class", "toolTip");
 
     let x = d3.scaleBand()
               .range([0, this.width])
@@ -35,7 +36,14 @@ export default class Chart extends Component {
           }else {
              return 'gray';
           }
-      })
+      }).on("mousemove", function(d){
+            tooltip
+              .style("left", d3.event.pageX - 50 + "px")
+              .style("top", d3.event.pageY - 70 + "px")
+              .style("display", "inline-block")
+              .html(d.name + " (" + d.value + ")");
+        })
+        .on("mouseout", function(d){ tooltip.style("display", "none");});
   }
 
   componentDidUpdate() {
