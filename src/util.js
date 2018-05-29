@@ -49,8 +49,8 @@ function sliceBySelection(array, filters, yearFilter) {
   let result = [];
   array.forEach(function(element){
     let add = true;
-    if(parseInt(element["year"], 10) < parseInt(yearFilter.max, 10) && 
-       parseInt(element["year"], 10) > parseInt(yearFilter.min, 10)){
+    if(parseInt(element["year"], 10) <= parseInt(yearFilter.max, 10) && 
+       parseInt(element["year"], 10) >= parseInt(yearFilter.min, 10)){
       filters.forEach(function(filter){
         if(filter.value !== "Todos" && element[filter.key] !== filter.value){
             add &= false;

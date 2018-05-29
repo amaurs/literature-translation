@@ -16,7 +16,7 @@ import { BounceLoader } from 'react-spinners';
 
 
 const zoom_threshold = 5;
-const API = "http://45.33.126.223:3000"
+const API = "https://amaurs.com/api"
 
 function EasterEgg(props){
     let easterStyle = {
@@ -68,7 +68,7 @@ class App extends Component {
         let newData = data.map(element => {
           let row = {};
           row.author = element.AUTOR == null?"X":element.AUTOR;
-          row.language = element.LENGUA == null?"X":element.LENGUA;
+          row.language = element.Lengua == null?"X":element.Lengua;
           row.title = element.TITULO == null?"X":element.TITULO;
           row.publisher = element.EDITORIAL == null?"X":element.EDITORIAL;
           row.year = element.ANIO == null?"X":element.ANIO;
@@ -325,7 +325,7 @@ class App extends Component {
           </div>
           <div className="App-burger">
             <button className="button is-danger"   
-                    onClick={()=>this.handleMenu()}>Información</button>
+                    onClick={()=>this.handleMenu()}>Datos</button>
             <button className="button is-danger"   
                     onClick={()=>this.handleModal()}>Acerca de</button>
           </div>
