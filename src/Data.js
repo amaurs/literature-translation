@@ -43,11 +43,6 @@ export default class Data extends React.Component {
                     element['language'].toLowerCase().includes(searchKey) ||
                     element['url_title'].toLowerCase().includes(searchKey);
         });
-        let new_filtered = filtered.map(function(element){
-          element['title_plus_url'] = element['title'] + '|' + element['url_title'];
-          return element;
-        });
-        console.log(new_filtered);
         return <ReactTable
                      data={filtered}
                      columns={columns}

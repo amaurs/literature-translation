@@ -81,6 +81,7 @@ class App extends Component {
           row.lat_country = element.PAIS_LATITUD == null?0:element.PAIS_LATITUD;
           row.lng_country = element.PAIS_LONGITUD == null?0:element.PAIS_LONGITUD;
           row.url_title = element.URL_TRADUCCION == null?0:element.URL_TRADUCCION;
+          row.title_plus_url = row.title + "|" + row.url_title;
           return row;
         });
 
