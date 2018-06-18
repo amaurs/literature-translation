@@ -14,7 +14,8 @@ import 'react-input-range/lib/css/index.css';
 import _ from 'lodash';
 import { BounceLoader } from 'react-spinners';
 
-
+const Entities = require('html-entities').XmlEntities;
+const entities = new Entities();
 const zoom_threshold = 5;
 const API = "https://amaurs.com/api"
 
@@ -69,7 +70,7 @@ class App extends Component {
           let row = {};
           row.author = element.AUTOR == null?"X":element.AUTOR;
           row.language = element.LENGUA == null?"X":element.LENGUA;
-          row.title = element.TITULO == null?"X":element.TITULO;
+          row.title = element.TITULO == null?"X":entities.decode(element.TITULO);
           row.publisher = element.EDITORIAL == null?"X":element.EDITORIAL;
           row.year = element.ANIO == null?"X":element.ANIO;
           row.city = element.CIUDAD == null?"X":element.CIUDAD;
@@ -79,6 +80,7 @@ class App extends Component {
           row.country = element.PAIS == null?"X":element.PAIS;
           row.lat_country = element.PAIS_LATITUD == null?0:element.PAIS_LATITUD;
           row.lng_country = element.PAIS_LONGITUD == null?0:element.PAIS_LONGITUD;
+          row.url_title = element.URL_TRADUCCION == null?0:element.URL_TRADUCCION;
           return row;
         });
 

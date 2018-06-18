@@ -1,13 +1,22 @@
 import React from 'react';
-import ReactTable from 'react-table'
-import 'react-table/react-table.css'
+import ReactTable from 'react-table';
+import 'react-table/react-table.css';
+import { Link } from 'react-router-dom';
 
 export default class Data extends React.Component {
     render() {
         const columns = [{
                            Header: 'Título',
-                           accessor: 'title'
-                         }, {
+                           accessor: 'title_plus_url',
+                           Cell: function(e){
+                              if(e.value.split("|")[1]==null) {
+                                return <span>{e.value.split("|")[0]}</span>;
+                              } else {
+                                return <a href={e.value.split("|")[1]}> {e.value.split("|")[0]}</a>;
+                              }
+                            }
+                         },
+                         {
                            Header: 'Año',
                            accessor: 'year'
                          }, {
@@ -31,8 +40,14 @@ export default class Data extends React.Component {
                     element['genre'].toLowerCase().includes(searchKey) ||
                     element['country'].toLowerCase().includes(searchKey) ||
                     element['city'].toLowerCase().includes(searchKey) ||
-                    element['language'].toLowerCase().includes(searchKey);
+                    element['language'].toLowerCase().includes(searchKey) ||
+                    element['url_title'].toLowerCase().includes(searchKey);
         });
+        let new_filtered = filtered.map(function(element){
+          element['title_plus_url'] = element['title'] + '|' + element['url_title'];
+          return element;
+        });
+        console.log(new_filtered);
         return <ReactTable
                      data={filtered}
                      columns={columns}
