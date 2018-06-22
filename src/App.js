@@ -68,20 +68,22 @@ class App extends Component {
         window.addEventListener("resize", this.updateDimensions.bind(this));
         let newData = data.map(element => {
           let row = {};
-          row.author = element.AUTOR == null?"X":element.AUTOR;
-          row.language = element.LENGUA == null?"X":element.LENGUA;
-          row.title = element.TITULO == null?"X":entities.decode(element.TITULO);
-          row.publisher = element.EDITORIAL == null?"X":element.EDITORIAL;
-          row.year = element.ANIO == null?"X":element.ANIO;
-          row.city = element.CIUDAD == null?"X":element.CIUDAD;
-          row.genre = element.GENERO == null?"X":element.GENERO;
+          row.author = element.AUTOR == null?"S.D.":element.AUTOR;
+          row.language = element.Lengua == null?"S.D.":element.Lengua;
+          row.title = element.TITULO_TRADUCCION == null?"S.D.":element.TITULO_TRADUCCION;
+          row.original_title = element.TITULO_ORIGINAL == null?"S.D.":element.TITULO_ORIGINAL;
+          row.publisher = element.EDITORIAL == null?"S.D.":element.EDITORIAL;
+          row.year = element.ANIO == null?"S.D.":element.ANIO;
+          row.city = element.CIUDAD == null?"S.D.":element.CIUDAD;
+          row.genre = element.GENERO == null?"S.D.":element.GENERO;
           row.lat = element.CIUDAD_LATITUD == null?0:element.CIUDAD_LATITUD;
           row.lng = element.CIUDAD_LONGITUD == null?0:element.CIUDAD_LONGITUD;
-          row.country = element.PAIS == null?"X":element.PAIS;
+          row.country = element.PAIS == null?"S.D.":element.PAIS;
           row.lat_country = element.PAIS_LATITUD == null?0:element.PAIS_LATITUD;
           row.lng_country = element.PAIS_LONGITUD == null?0:element.PAIS_LONGITUD;
           row.url_title = element.URL_TRADUCCION == null?0:element.URL_TRADUCCION;
           row.title_plus_url = row.title + "|" + row.url_title;
+          row.translator =  element.TRADUCTORES == null?"S.D.":element.TRADUCTORES;
           return row;
         });
 
