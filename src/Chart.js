@@ -32,9 +32,9 @@ export default class Chart extends Component {
       .attr("height", function(d) { return height - y(d.value); })
       .attr("fill", function(d) { 
           if(+d.name >= bottom && +d.name <= up) {
-             return 'steelblue';
-          }else {
-             return 'gray';
+               return '#3f51b5';
+            }else {
+               return '#ccc';
           }
       }).on("mousemove", function(d){
             tooltip
@@ -52,6 +52,8 @@ export default class Chart extends Component {
     let dims = this.svg.getBoundingClientRect();
     this.width = dims.width;
     this.height = dims.height;
+    let tooltip = d3.select("body").append("div").attr("class", "toolTip");
+
 
     let x = d3.scaleBand()
               .range([0, this.width])
@@ -65,10 +67,35 @@ export default class Chart extends Component {
     let up = this.props.value.max;
     let bottom = this.props.value.min;
 
-    d3.select(this.svg)
+    let bars = d3.select(this.svg)
       .selectAll(".bar")
-      .data(this.props.data)
-      .attr("x", function(d) {return x(d.name)})
+      .data(this.props.data);
+
+    bars.exit().remove();
+
+    bars.enter()
+        .append("rect")
+        .attr("class", "bar")
+        .attr("x", function(d) {return x(d.name)})
+        .attr("width", x.bandwidth())
+        .attr("y", function(d) { return y(d.value); })
+        .attr("height", function(d) { return height - y(d.value); })
+        .attr("fill", function(d) { 
+            if(+d.name >= bottom && +d.name <= up) {
+               return '#3f51b5';
+            }else {
+               return '#ccc';
+            }
+        }).on("mousemove", function(d){
+              tooltip
+                .style("left", d3.event.pageX - 50 + "px")
+                .style("top", d3.event.pageY - 70 + "px")
+                .style("display", "inline-block")
+                .html(d.name + " (" + d.value + ")");
+          })
+          .on("mouseout", function(d){ tooltip.style("display", "none");});
+
+    bars.attr("x", function(d) {return x(d.name)})
       .attr("width", x.bandwidth())
       .attr("y", function(d) { return y(d.value); })
       .attr("height", function(d) { return height - y(d.value); })

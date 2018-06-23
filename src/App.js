@@ -35,9 +35,9 @@ class App extends Component {
 
     this.state = {
       selection: [{key:"genre", value:"Todos"}, 
-               {key:"language", value:"Todos"}, 
-               {key:"country", value:"Todos"}, 
-               {key:"city", value:"Todos"}],
+                  {key:"language", value:"Todos"}, 
+                  {key:"country", value:"Todos"}, 
+                  {key:"city", value:"Todos"}],
       slice: null,
       books: null,
       searchKey: "",
@@ -52,7 +52,7 @@ class App extends Component {
       pos: 0,
       modal: false,
       hideData: true,
-      value:{ min: 0, max: 2000 },
+      value:{ min: 1886, max: 2018 },
       currentPage:1,
       isLoading:true,
     }
@@ -87,24 +87,11 @@ class App extends Component {
           return row;
         });
 
-        let yearsObj = mapValuesYear(newData, "year");
-        delete yearsObj[0];
-        let years = Object.keys(yearsObj);
-        let chartData = [];
-        let minYear = Math.min.apply(Math, years);
-        let maxYear = Math.max.apply(Math, years);
 
-        for(let year = minYear; year < maxYear + 1; year++) {
-          chartData.push({name:year, value:(yearsObj[year]?yearsObj[year]:0)});
-        }
 
 
         this.setState({isLoading:false, 
-                       books:newData, 
-                       chartData:chartData, 
-                       maxYear:maxYear, 
-                       minYear:minYear, 
-                       value:{ min: minYear, max: maxYear }});
+                       books:newData});
 
         this.updateSlice();
         const leafletMap = this.leafletMap.leafletElement;
@@ -130,6 +117,12 @@ class App extends Component {
 
   handleClick(parent) {
     this.setValueFromType(parent, "Todos");
+  }
+
+  handleYearClick(parent) {
+    console.log("Reset years.");
+    this.resetSliceYear();
+    this.updateSliceDebounced();
   }
 
   handleModal(){
@@ -210,11 +203,33 @@ class App extends Component {
     }
   }
 
+  resetSliceYear() {
+    this.setState({value:{ min: 1886, max: 2018 }});
+  }
+
   updateSlice() {
     console.log("Updating slice");
     let books = this.state.books;
     let newSlice = sliceBySelection(books, this.state.selection, this.state.value);
-    this.setState({slice:newSlice, currentPage:1});
+    
+    let yearsObj = mapValuesYear(newSlice, "year");
+    delete yearsObj[0];
+    let years = Object.keys(yearsObj);
+    let chartData = [];
+    let minYear = Math.min.apply(Math, years);
+    let maxYear = Math.max.apply(Math, years);
+
+    for(let year = minYear; year < maxYear + 1; year++) {
+      chartData.push({name:year, value:(yearsObj[year]?yearsObj[year]:0)});
+    }
+
+
+    this.setState({slice:newSlice, 
+                   currentPage:1, 
+                   chartData:chartData, 
+                   maxYear:maxYear, 
+                   minYear:minYear,
+                   value:{ min: minYear, max: maxYear }});
   }
 
   renderDropdown(type) {
@@ -227,9 +242,14 @@ class App extends Component {
   }
 
   renderSelection(type) {
-
     return <Selection value={this.getValueFromType(type)} 
                       onClick={()=>this.handleClick(type)}/>
+  }
+
+  renderYearSelection() {
+
+    return <Selection value={"Reestablecer años"} 
+                      onClick={()=>this.handleYearClick()}/>
   }
 
   getStyle(feature, layer) {
@@ -341,6 +361,7 @@ class App extends Component {
             {this.renderSelection("language")}
             {this.renderSelection("country")}
             {this.renderSelection("city")}
+            {this.renderYearSelection()}
           </div>
         </div>
         <div className={"App-data" + (this.state.hideData?" hide-data":"")}>
