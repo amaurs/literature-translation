@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
+import { extractContent } from './util.js';
 
 function htmlDecode(input){
     var e = document.createElement('div');
@@ -16,6 +17,9 @@ export default class Data extends React.Component {
                            accessor: 'title',
                            Cell: function(e){
                                 return <div dangerouslySetInnerHTML={{ __html: e.value}} />;
+                           },
+                           sortMethod: (a, b) => {
+                             return extractContent(a).trim().localeCompare(extractContent(b).trim());
                            }
                          },
                          {
@@ -23,6 +27,9 @@ export default class Data extends React.Component {
                            accessor: 'translator',
                            Cell: function(e){
                                 return <div dangerouslySetInnerHTML={{ __html: e.value}} />;
+                           },
+                           sortMethod: (a, b) => {
+                             return extractContent(a).trim().localeCompare(extractContent(b).trim());
                            }
                          },
                          {
@@ -30,6 +37,9 @@ export default class Data extends React.Component {
                            accessor: 'original_title',
                            Cell: function(e){
                                 return <div dangerouslySetInnerHTML={{ __html: e.value}} />;
+                           },
+                           sortMethod: (a, b) => {
+                             return extractContent(a).trim().localeCompare(extractContent(b).trim());
                            }
                          },
                          {
@@ -37,6 +47,9 @@ export default class Data extends React.Component {
                            accessor: 'author',
                            Cell: function(e){
                                 return <div dangerouslySetInnerHTML={{ __html: e.value}} />;
+                           },
+                           sortMethod: (a, b) => {
+                             return extractContent(a).trim().localeCompare(extractContent(b).trim());
                            }
                          },
                          {
