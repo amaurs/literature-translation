@@ -81,7 +81,8 @@ export default class Data extends React.Component {
         return <ReactTable
                      data={filtered}
                      columns={columns}
-                     pageSizeOptions={[5, 10, 20]}
+                     defaultPageSize={10}
+                     pageSizeOptions={[5, 10]}
                    />
     }
 }

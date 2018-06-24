@@ -136,7 +136,16 @@ class App extends Component {
   }
 
   handleDownload(parent) {
-    let fields = ["title","genre","country","city","year","language"];
+    let fields = ["title",
+                  "translator",
+                  "original_title",
+                  "author",
+                  "country",
+                  "city",
+                  "publisher",
+                  "year",
+                  "language",
+                  "genre"];
     let csv = json2csv({ data: this.state.slice, fields: fields });
     download(csv, "datos.csv", "text/csv");
   }
