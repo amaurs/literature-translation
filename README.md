@@ -8,7 +8,7 @@ For more information on this project contact Silvia Gutiérrez (segutierrez {at}
 
 A beta version of this project is available [here](http://www.elem.mx/estgrp/datos/1335):
 
-![alt text](/20180112-screenshot.png)
+![alt text](/elem_mapa_observar_seleccion.gif)
 
 # Installation
 
