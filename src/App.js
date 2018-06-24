@@ -5,7 +5,7 @@ import CitiesLayer from './CitiesLayer';
 import Selection from './Selection';
 import InputRange from 'react-input-range';
 import { Map, TileLayer } from 'react-leaflet';
-import { mapValuesYear, mapValues, sliceBySelection, sliceBySelectionFunctional, download } from './util';
+import { extractContent, mapValuesYear, mapValues, sliceBySelection, sliceBySelectionFunctional, download } from './util';
 import './App.css';
 import json2csv from 'json2csv';
 import assets from './assets.js';
@@ -68,7 +68,7 @@ class App extends Component {
         window.addEventListener("resize", this.updateDimensions.bind(this));
         let newData = data.map(element => {
           let row = {};
-          row.author = element.AUTOR == null?"S.D.":element.AUTOR;
+          row.author = element.AUTOR == null?"S.D.":entities.decode(element.AUTOR);
           row.language = element.Lengua == null?"S.D.":element.Lengua;
           row.title = element.TITULO_TRADUCCION == null?"S.D.":element.TITULO_TRADUCCION;
           row.original_title = element.TITULO_ORIGINAL == null?"S.D.":element.TITULO_ORIGINAL;
@@ -83,7 +83,7 @@ class App extends Component {
           row.lng_country = element.PAIS_LONGITUD == null?0:element.PAIS_LONGITUD;
           row.url_title = element.URL_TRADUCCION == null?0:element.URL_TRADUCCION;
           row.title_plus_url = row.title + "|" + row.url_title;
-          row.translator =  element.TRADUCTORES == null?"S.D.":element.TRADUCTORES;
+          row.translator =  element.TRADUCTORES == null?"S.D.":entities.decode(element.TRADUCTORES);
           return row;
         });
 
@@ -146,7 +146,21 @@ class App extends Component {
                   "year",
                   "language",
                   "genre"];
-    let csv = json2csv({ data: this.state.slice, fields: fields });
+    let copy = this.state.slice.map(function(element){
+      let elementCopy = {};
+      elementCopy["title"] = extractContent(element["title"]);
+      elementCopy["translator"] = extractContent(element["translator"]);
+      elementCopy["original_title"] = extractContent(element["original_title"]);
+      elementCopy["author"] = extractContent(element["author"]);
+      elementCopy["country"] = element["country"];
+      elementCopy["city"] = element["city"];
+      elementCopy["publisher"] = element["publisher"];
+      elementCopy["year"] = element["year"];
+      elementCopy["language"] = element["language"];
+      elementCopy["genre"] = element["genre"];
+      return elementCopy;
+    });
+    let csv = json2csv({ data: copy, fields: fields });
     download(csv, "datos.csv", "text/csv");
   }
 

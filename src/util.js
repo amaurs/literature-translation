@@ -90,4 +90,12 @@ function download(data, filename, mime) {
   window.URL.revokeObjectURL(blobURL);
 }
 
-export { mapValuesYear, mapValues, sliceBySelection, sliceBySelectionFunctional, download };
+function extractContent(html) {
+    return (new DOMParser)
+            .parseFromString(html, "text/html")
+            .documentElement
+            .textContent;
+
+}
+
+export { extractContent, mapValuesYear, mapValues, sliceBySelection, sliceBySelectionFunctional, download };

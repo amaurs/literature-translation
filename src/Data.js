@@ -22,7 +22,7 @@ export default class Data extends React.Component {
                            Header: 'Traductor',
                            accessor: 'translator',
                            Cell: function(e){
-                                return <div dangerouslySetInnerHTML={{ __html: htmlDecode(e.value)}} />;
+                                return <div dangerouslySetInnerHTML={{ __html: e.value}} />;
                            }
                          },
                          {
@@ -36,7 +36,7 @@ export default class Data extends React.Component {
                            Header: 'Autor',
                            accessor: 'author',
                            Cell: function(e){
-                                return <div dangerouslySetInnerHTML={{ __html: htmlDecode(e.value)}} />;
+                                return <div dangerouslySetInnerHTML={{ __html: e.value}} />;
                            }
                          },
                          {
