@@ -13,7 +13,7 @@ export default class Data extends React.Component {
    
     render() {
         const columns = [{
-                           Header: 'Título',
+                           Header: 'Título traducido',
                            accessor: 'title',
                            Cell: function(e){
                                 return <div dangerouslySetInnerHTML={{ __html: e.value}} />;
@@ -69,7 +69,7 @@ export default class Data extends React.Component {
                            accessor: 'year'
                          }, 
                          {
-                           Header: 'Lengua de traducción',
+                           Header: 'Idioma de la traducción',
                            accessor: 'language'
                          },
                          {
