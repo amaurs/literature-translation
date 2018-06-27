@@ -72,7 +72,7 @@ class App extends Component {
           row.language = element.Lengua == null?"S.D.":element.Lengua;
           row.title = element.TITULO_TRADUCCION == null?"S.D.":element.TITULO_TRADUCCION;
           row.original_title = element.TITULO_ORIGINAL == null?"S.D.":element.TITULO_ORIGINAL;
-          row.publisher = element.EDITORIAL == null?"S.D.":element.EDITORIAL;
+          row.publisher = element.EDITORIALES == null?"S.D.":entities.decode(element.EDITORIALES);
           row.year = element.ANIO == null?"S.D.":element.ANIO;
           row.city = element.CIUDAD == null?"S.D.":element.CIUDAD;
           row.genre = element.GENERO == null?"S.D.":element.GENERO;
