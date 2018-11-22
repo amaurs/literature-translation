@@ -1,5 +1,5 @@
 # Puesta en Mapa
-Map of literary translations with data from the [Encyclopedia of Mexican Literature](http://elem.mx/) a collaboration between de [Fundación Mexicana para las Letras](http://flm.mx/) and the [Daniel Cosío Villegas Library](https://biblioteca.colmex.mx/).
+Map of literary translations with data from the [Encyclopedia of Mexican Literature](http://elem.mx/) a collaboration between de [Fundación Mexicana para las Letras](http://flm.mx/) and the [Daniel Cosío Villegas Library](https://biblioteca.colmex.mx/). 
 
 ## Contact
 For more information on this project contact Silvia Gutiérrez (segutierrez {at} colmex.mx), Digital Humanities Librarian at El Colegio de México
