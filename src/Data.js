@@ -69,7 +69,7 @@ export default class Data extends React.Component {
                            accessor: 'year'
                          }, 
                          {
-                           Header: 'Idioma de la traducción',
+                           Header: 'Lengua Meta',
                            accessor: 'language'
                          },
                          {
