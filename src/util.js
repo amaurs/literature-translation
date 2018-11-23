@@ -38,6 +38,11 @@ function mapValuesYear(array, column) {
     return returnObject;
 }
 
+function htmlDecode(input){
+    var e = document.createElement('div');
+    e.innerHTML = input;
+    return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+}
 
 
 /**
@@ -91,11 +96,11 @@ function download(data, filename, mime) {
 }
 
 function extractContent(html) {
-    return (new DOMParser)
+    return new DOMParser()
             .parseFromString(html, "text/html")
             .documentElement
             .textContent;
 
 }
 
-export { extractContent, mapValuesYear, mapValues, sliceBySelection, sliceBySelectionFunctional, download };
+export { extractContent, mapValuesYear, mapValues, sliceBySelection, sliceBySelectionFunctional, download, htmlDecode };

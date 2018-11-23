@@ -3,12 +3,6 @@ import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 import { extractContent } from './util.js';
 
-function htmlDecode(input){
-    var e = document.createElement('div');
-    e.innerHTML = input;
-    return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
-}
-
 export default class Data extends React.Component {
    
     render() {
@@ -69,7 +63,7 @@ export default class Data extends React.Component {
                            accessor: 'year'
                          }, 
                          {
-                           Header: 'Lengua Meta',
+                           Header: 'Lengua Meta ',
                            accessor: 'language'
                          },
                          {

@@ -5,7 +5,7 @@ import CitiesLayer from './CitiesLayer';
 import Selection from './Selection';
 import InputRange from 'react-input-range';
 import { Map, TileLayer } from 'react-leaflet';
-import { extractContent, mapValuesYear, mapValues, sliceBySelection, sliceBySelectionFunctional, download } from './util';
+import { extractContent, mapValuesYear, mapValues, sliceBySelection, download } from './util';
 import './App.css';
 import json2csv from 'json2csv';
 import assets from './assets.js';
