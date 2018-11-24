@@ -374,9 +374,9 @@ class App extends Component {
               onChange={value => this.handleSliderChange(value)} />
           </div>
           <div className="App-burger">
-            <button className="button is-danger"   
-                    onClick={()=>this.handleMenu()}>Datos</button>
-            <button className="button is-danger"   
+            <button className="button is-danger is-fullwidth"   
+                    onClick={()=>this.handleMenu()}>{(this.state.hideData?"Datos":"Mapa")}</button>
+            <button className="button is-danger is-fullwidth"   
                     onClick={()=>this.handleModal()}>Acerca de</button>
           </div>
           <div className="App-selection mycontainer">
@@ -410,12 +410,39 @@ class App extends Component {
           <div className="modal-background"></div>
           <div className="modal-card">
             <header className="modal-card-head">
-              <p className="modal-card-title">Modal title</p>
+              <p className="modal-card-title">Acerca de</p>
               <button className="delete" aria-label="close" onClick={()=>this.handleModal()}></button>
             </header>
-            <section className="modal-card-body">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eleifend tristique turpis, ut congue ipsum elementum eget. Nam luctus, tortor ac mollis rhoncus, turpis dolor porta quam, ut hendrerit leo erat eget dui. Donec quis ex venenatis, dapibus nibh id, tincidunt urna. Ut posuere lacinia eleifend. Sed vel enim at eros suscipit blandit. Quisque consectetur purus at tortor suscipit, ac feugiat erat fringilla. Nam massa sem, placerat in gravida ac, condimentum at arcu. Phasellus non iaculis arcu. Maecenas vulputate et magna sed auctor. Duis eu nisl et nunc ullamcorper consectetur. Nam condimentum eros eu vestibulum vestibulum. Nullam a tempus velit, sed lacinia leo. Nunc lectus elit, pharetra id sem sed, hendrerit lacinia mi. Fusce tincidunt quam non nisi tempus imperdiet. Donec tincidunt velit et sapien placerat, sit amet convallis diam condimentum. Pellentesque maximus vehicula diam sit amet fringilla.
-              Donec malesuada, ipsum sit amet viverra efficitur, nunc felis scelerisque neque, eu euismod sem nisi vel velit. Curabitur blandit posuere ipsum in finibus. Morbi mauris ligula, finibus ac scelerisque nec, tristique at libero. Aliquam bibendum dolor odio, ac rutrum quam vehicula ac. Proin feugiat non nisl eget elementum. Nulla ex elit, commodo vitae hendrerit a, lacinia in nibh. Donec molestie ex non sagittis tristique. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Cras tristique tristique finibus. Maecenas elementum pharetra turpis, et efficitur justo interdum et. Maecenas tristique vulputate pharetra. Sed eleifend sapien quis diam ornare convallis. Mauris quis vulputate magna. Cras molestie lorem nisi, vel euismod nunc rutrum luctus. Mauris non pretium erat, non gravida mauris.
+            <section className="modal-card-body content">
+              <p>La siguiente <span class="is-italic">puesta en mapa</span> permite observar las maneras en que la literatura de México ha sido traducida, en el último siglo y medio, a las lenguas de otros espacios literarios del mundo.</p>
+              <p>Cuando menos 367 lenguas –364 indígenas u originarias, 2 romances (español y véneto) y 1 criolla (mascogo)–, conforman el espacio lingüístico nacional; sin embargo, en México sólo han sido reconocidas las lenguas indígenas (en fecha muy reciente) y el español, como lenguas nacionales. </p>
+              <p>Por su parte, el español ha sido la lengua de la que ha derivado la mayoría de las obras que conforman la literatura escrita del país y es, por esta razón, la principal lengua fuente de la <span class="is-italic">extraducción</span> literaria (exportación de los textos de un espacio lingüístico nacional a las lenguas de otras naciones).</p>
+              <p>El corpus se encuentra en constante crecimiento. Incluye una cantidad significativa de títulos, autores/as, traductores/as, editoriales, lugares de edición y lenguas meta. Aspira a abarcar la totalidad de las lenguas a las que se han vertido las obras literarias de México.</p>
+              <p>Por primera vez, contaremos con una visión de conjunto capaz de mostrar, a medida que se enriquezca, un aspecto de la difusión de nuestras letras y el grado de contacto, a través del libro, entre los agentes de las <span class="is-italic">comunidades orales</span>, las <span class="is-italic">ciudades letradas</span> y la <span class="is-italic">República mundial de las Letras</span>, desde la perspectiva de la extraducción.</p>
+              <p>Bajo las coordenadas de espacio y tiempo, se ha elegido el término de puesta en mapa, en analogía de la puesta en página, noción con que se suele aludir a la manera en que se plasma un texto en las páginas de un libro.</p>
+              <p><span class="is-italic">Con la Puesta en mapa: la literatura de México en lenguas nacionales a través de sus traducciones</span>, la ELEM se sitúa en el horizonte de las Humanidades Digitales y comienza el largo camino que buscará desembocar en un <span class="is-italic">Atlas de la literatura en México.</span></p>
+              <ul>
+                <li class="has-text-weight-semibold">Roberto González</li>
+                <li>Coordinador de catalogación</li>
+              </ul>
+              <ul>
+                <li class="has-text-weight-semibold">Julio César Cardoso</li>
+                <li>Programador</li>
+              </ul>
+              <ul>
+                <li class="has-text-weight-semibold">Amaury Gutiérrez </li>
+                <li>Desarrollador</li>
+              </ul>
+              <ul>
+                <li class="has-text-weight-semibold">Silvia Eunice Gutiérrez de la Torre</li>
+                <li>Coordinadora</li>
+                <li>Atlas de la literatura en México</li>
+              </ul>
+              <ul>
+                <li class="has-text-weight-semibold">Jorge Mendoza Romero</li>
+                <li>Coordinador general</li>
+                <li>Enciclopedia de la literatura en México</li>
+              </ul>
             </section>
           </div>
         </div>
